@@ -48,6 +48,7 @@ A modern web application for managing tasks with an interactive calendar interfa
 
 ### Project Stucture
 
+```
 src/
 ├── app/                  
 │   ├── _components/      
