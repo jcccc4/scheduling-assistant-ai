@@ -46,19 +46,33 @@ A modern web application for managing tasks with an interactive calendar interfa
    ```
 4. Open http://localhost:3000 in your browser.
 
-#Project Stucture
-src/
-├── app/ // Next.js App Directory structure
-│ ├── \_components/ // Reusable components
-│ │ └── calendar/ // Calendar-related components (views, events, form)
-│ ├── layout.tsx // Main app layout
-│ └── globals.css // Global CSS styles
-├── components/ // Additional UI components
-│ └── ui/ // UI library components (e.g., Popover)
-└── lib/ // Utility functions and types
-└── types.ts // Type definitions
+### Project Stucture
 
-#Contributing
+```
+src/
+├── app/                  
+│   ├── _components/      
+│   │   └── calendar/     
+│   │       ├── views/        # Calendar view components
+│   │       ├── events/       # Event handling components
+│   │       └── form/         # Task creation forms
+│   ├── layout.tsx           # Root layout component
+│   └── globals.css          # Global styles
+│
+├── components/          
+│   └── ui/                  # Reusable UI components
+│       ├── popover/         # Popover components
+│       ├── sidebar/         # Sidebar components
+│       ├── sheet/          # Sheet components
+│       └── textarea/       # Text input components
+│
+└── lib/                
+    ├── utils.ts            # Utility functions
+    └── types.ts           # TypeScript type definitions
+```
+
+### Contributing
+
 We welcome contributions! Here's how to get started:
 
 1. Fork the repository.
