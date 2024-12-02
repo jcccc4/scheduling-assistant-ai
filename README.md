@@ -71,7 +71,7 @@ src/
     └── types.ts           # TypeScript type definitions
 ```
 
-###Contributing
+### Contributing
 
 We welcome contributions! Here's how to get started:
 
