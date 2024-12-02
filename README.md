@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Assistant
+
+A modern web application for managing tasks with an interactive calendar interface. Built using Next.js, React, and TypeScript, Task Assistant offers a clean and efficient way to organize your daily schedule.
+
+## Features
+
+- **Weekly Calendar View:** View your tasks in a clear weekly calendar format, with 24-hour time slots.
+- **Intuitive Task Management:** Easily create, edit, and delete tasks. Set start and end times with precision.
+- **Interactive UI:** Enjoy a smooth user experience with interactive elements and popover forms for easy task creation.
+- **Responsive Design:** Works seamlessly across various devices, from desktops to mobile phones.
+- **Real-time Updates:** See your changes reflected immediately in the calendar.
+- **GMT Timezone:** Displays times in GMT for consistent time representation.
+
+## Tech Stack
+
+- **Next.js:** React Framework for building server-side rendered and static websites.
+- **React:** JavaScript library for building user interfaces.
+- **TypeScript:** Superset of JavaScript that adds static typing.
+- **Tailwind CSS:** Rapidly build custom designs without writing much CSS.
+- **Custom UI Components:** Reusable components built for consistency and efficiency.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (version 14 or higher)
+- npm or yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```bash
+   git clone [your-repository-url]
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+    # or
+    yarn install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+    # or
+    yarn dev
+   ```
+4. Open http://localhost:3000 in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#Project Stucture
+src/
+├── app/ // Next.js App Directory structure
+│ ├── \_components/ // Reusable components
+│ │ └── calendar/ // Calendar-related components (views, events, form)
+│ ├── layout.tsx // Main app layout
+│ └── globals.css // Global CSS styles
+├── components/ // Additional UI components
+│ └── ui/ // UI library components (e.g., Popover)
+└── lib/ // Utility functions and types
+└── types.ts // Type definitions
 
-## Learn More
+#Contributing
+We welcome contributions! Here's how to get started:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Fork the repository.
+2. Create a new branch: git checkout -b feature/your-feature-name
+3. Make your changes and commit them: git commit -m "Your descriptive commit message"
+4. Push your branch: git push origin feature/your-feature-name
+5. Open a pull request.
