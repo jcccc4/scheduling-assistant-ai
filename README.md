@@ -69,9 +69,10 @@ src/
 └── lib/                
     ├── utils.ts            # Utility functions
     └── types.ts           # TypeScript type definitions
+```
 
+###Contributing
 
-#Contributing
 We welcome contributions! Here's how to get started:
 
 1. Fork the repository.
