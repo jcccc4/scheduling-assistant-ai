@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import { WeeklyView } from "./views/weekly";
 import { MonthlyView } from "./views/monthly";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export const MONTHS = [
@@ -31,13 +32,12 @@ export const MONTHS = [
   "December",
 ];
 
+export const today = new Date();
+
 export const gridHeight = 50;
 //style autorows
 export const TimeColumn = () => (
-  <div
-    className={`grid gap-[1px]`}
-    style={{ gridAutoRows: `${gridHeight}px` }}
- >
+  <div className={`grid gap-[1px]`} style={{ gridAutoRows: `${gridHeight}px` }}>
     {Array.from({ length: 24 }).map((_, index) => (
       <div
         key={index}
@@ -50,7 +50,8 @@ export const TimeColumn = () => (
 );
 
 export default function Scheduler() {
-  const [view, setView] = useState("weekly"); // Set "month" as default
+  const [view, setView] = useState("weekly");
+  const [selectedDate, setSelectedDate] = useState(today);
   const [month, setMonth] = useState(new Date().getMonth()); // Set "month" as default
   const [year, setYear] = useState(new Date().getFullYear()); // Set "month" as default
   const [tasks, setTasks] = useState<Task[]>([
@@ -62,23 +63,57 @@ export default function Scheduler() {
     },
   ]);
 
-  const today = new Date();
-
   const handleAddTask = (task: Task) => {
     setTasks([...tasks, task]);
+  };
+
+  const handlePreviousWeek = (
+    selectedDate: Date,
+    setSelectedDate: React.Dispatch<React.SetStateAction<Date>>
+  ) => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() - 7);
+    setSelectedDate(newDate);
+  };
+
+  const handleNextWeek = (
+    selectedDate: Date,
+    setSelectedDate: React.Dispatch<React.SetStateAction<Date>>
+  ) => {
+    const newDate = new Date(selectedDate);
+    newDate.setDate(newDate.getDate() + 7);
+    setSelectedDate(newDate);
   };
 
   const CalendarHeader = () => {
     return (
       <header className="h-14 bg-white flex items-center justify-between text-xl px-4 shrink-0">
         <div className="flex items-center gap-4">
-          <SidebarTrigger />
+          <div>
+            <SidebarTrigger />
+
+            <Button variant="outline" size="sm">
+              Today
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePreviousWeek(selectedDate, setSelectedDate)}
+            >
+              <ChevronLeft />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleNextWeek(selectedDate, setSelectedDate)}
+            >
+              <ChevronRight />
+            </Button>
+          </div>
           <h1 className="font-semibold">{`${
             MONTHS[today.getMonth()]
           } ${today.getFullYear()}`}</h1>
-          <Button variant="outline" size="sm">
-            Today
-          </Button>
         </div>
         <div className="flex items-center gap-4">
           <Select value={view} onValueChange={setView}>
@@ -103,7 +138,13 @@ export default function Scheduler() {
       case "daily":
         return <DailyView />;
       case "weekly":
-        return <WeeklyView onAddTask={handleAddTask} tasks={tasks} />;
+        return (
+          <WeeklyView
+            onAddTask={handleAddTask}
+            tasks={tasks}
+            selectedDate={selectedDate}
+          />
+        );
 
       case "monthly":
         return <MonthlyView />;
