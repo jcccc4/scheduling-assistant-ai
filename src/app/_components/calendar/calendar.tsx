@@ -59,8 +59,14 @@ export default function Scheduler() {
     {
       id: "test",
       title: "test",
-      startTime: new Date(2024, 10, 30, 1),
-      endTime: new Date(2024, 10, 30, 2),
+      startTime: new Date(2024, 11, 12, 1),
+      endTime: new Date(2024, 11, 12, 10),
+    },
+    {
+      id: "test",
+      title: "test",
+      startTime: new Date(2024, 11, 12, 1),
+      endTime: new Date(2024, 11, 12, 2),
     },
   ]);
 
