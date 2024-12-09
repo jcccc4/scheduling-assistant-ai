@@ -100,7 +100,7 @@ export const WeeklyView = ({
                       <PopoverContent className="w-full p-4" side="left">
                         <TaskForm
                           onAddTask={onAddTask}
-                          selectedDate={selectedDate}
+                          selectedDate={taskDate}
                         />
                       </PopoverContent>
                     </Popover>

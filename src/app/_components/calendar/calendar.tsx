@@ -15,6 +15,7 @@ import { Task } from "@/lib/types";
 import { WeeklyView } from "./views/weekly";
 import { MonthlyView } from "./views/monthly";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DailyView } from "./views/daily";
 
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export const MONTHS = [

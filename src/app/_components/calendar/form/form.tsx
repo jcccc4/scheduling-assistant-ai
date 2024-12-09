@@ -54,6 +54,7 @@ export const TaskForm = ({
       endTime: addHours(selectedDate, 1), // Add this
     },
   });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Here you would handle form submission
     //add duration
@@ -61,6 +62,7 @@ export const TaskForm = ({
       id: "test",
       ...values,
     });
+
     console.log(values);
   }
   return (
@@ -174,7 +176,13 @@ export const TaskForm = ({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) => date < form.getValues("endTime")}
+                      disabled={(date) => {
+                        const compareDate = new Date(date);
+                        const today = new Date();
+                        today.setHours(0);
+                        compareDate.setHours(0);
+                        return compareDate < today;
+                      }}
                       initialFocus
                     />
                   </PopoverContent>
@@ -182,7 +190,7 @@ export const TaskForm = ({
                 <Select
                   value={field.value.getHours().toString()}
                   onValueChange={(e) => {
-                    console.log(field.value)
+                    console.log(field.value);
                     const timeNumber = Number(e);
                     const newDate = new Date(field.value);
                     newDate.setHours(timeNumber);
