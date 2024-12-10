@@ -68,6 +68,12 @@ export default function Scheduler() {
       startTime: new Date(2024, 11, 12, 1),
       endTime: new Date(2024, 11, 12, 2),
     },
+    {
+      id: "test",
+      title: "test",
+      startTime: new Date(2024, 11, 12, 1),
+      endTime: new Date(2024, 11, 12, 3),
+    },
   ]);
 
   const handleAddTask = (task: Task) => {

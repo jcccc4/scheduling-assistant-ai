@@ -75,26 +75,56 @@ export const WeeklyView = ({
                   const taskDate = new Date(dayDate);
                   taskDate.setHours(hour);
 
-                  const taskIndex = tasks.findIndex(
-                    (task) =>
-                      task.startTime.getHours() === taskDate.getHours() &&
-                      task.startTime.getDate() === taskDate.getDate() &&
-                      task.startTime.getMonth() === taskDate.getMonth() &&
-                      task.startTime.getFullYear() === taskDate.getFullYear()
-                  );
+                  const filteredTasks = tasks
+                    .filter((task) => {
+                      const taskStart = new Date(task.startTime);
+                      const taskEnd = task.endTime
+                        ? new Date(task.endTime)
+                        : null;
+
+                      if (taskEnd === null) {
+                        // If no end time, only check if after start time
+                        return taskDate >= taskStart;
+                      }
+
+                      return taskDate >= taskStart && taskDate < taskEnd;
+                    })
+                    .sort((a, b) => {
+                      const durationA =
+                        new Date(a.endTime).getTime() -
+                        new Date(a.startTime).getTime();
+                      const durationB =
+                        new Date(b.endTime).getTime() -
+                        new Date(b.startTime).getTime();
+                      return durationB - durationA; // ascending order
+                    });
 
                   return (
                     <Popover key={hour}>
                       <PopoverTrigger asChild className="bg-white">
-                        <div className={cn("relative hover:bg-slate-200")}>
-                          {taskIndex !== -1 && (
-                            <CalendarEvent
-                              title={tasks[taskIndex].title}
-                              startTime={tasks[taskIndex].startTime}
-                              endTime={tasks[taskIndex].endTime}
-                              description={tasks[taskIndex].description}
-                            />
-                          )}
+                        <div className={cn("relative hover:bg-slate-200 ")}>
+                          <div className="w-11/12 relative">
+                            {filteredTasks.map((task, index) => {
+                              return task.startTime.getHours() ===
+                                taskDate.getHours() &&
+                                task.startTime.getDate() ===
+                                  taskDate.getDate() &&
+                                task.startTime.getMonth() ===
+                                  taskDate.getMonth() &&
+                                task.startTime.getFullYear() ===
+                                  taskDate.getFullYear() ? (
+                                <CalendarEvent
+                                  key={index}
+                                  title={filteredTasks[index].title}
+                                  startTime={filteredTasks[index].startTime}
+                                  endTime={filteredTasks[index].endTime}
+                                  description={filteredTasks[index].description}
+                                  length={filteredTasks.length}
+                                  index={index}
+                                />
+                              ) : null;
+                            })}
+                          </div>
                         </div>
                       </PopoverTrigger>
                       <PopoverContent className="w-full p-4" side="left">
