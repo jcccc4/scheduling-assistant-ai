@@ -3,17 +3,32 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DAYS, TimeColumn, today } from "../calendar";
+import { DAYS, gridHeight, TimeColumn, today } from "../calendar";
 import { Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import CalendarEvent from "../events/events";
 import { TaskForm } from "../form/form";
+import { useEffect, useState } from "react";
 
 const isToday = (date: Date) => {
   return (
     today.getFullYear() === date.getFullYear() &&
     today.getMonth() === date.getMonth() &&
     today.getDate() === date.getDate()
+  );
+};
+const findTimeBarHeight = () => {
+  const todayTime = new Date();
+  console.log(
+    ((todayTime.getHours() * 60 + todayTime.getMinutes()) / (24 * 60)) *
+      gridHeight *
+      24
+  );
+  return (
+    ((todayTime.getHours() * 60 + todayTime.getMinutes()) / (24 * 60)) *
+      gridHeight *
+      24 +
+    12
   );
 };
 
@@ -52,6 +67,19 @@ export const WeeklyView = ({
   selectedDate: Date;
 }) => {
   selectedDate.setHours(0, 0, 0, 0);
+  const [currentTimeHeight, setCurrentTimeHeight] = useState(findTimeBarHeight());
+  
+  useEffect(() => {
+    // Update time immediately
+    setCurrentTimeHeight(findTimeBarHeight());
+    
+    const interval = setInterval(() => {
+      setCurrentTimeHeight(findTimeBarHeight());
+    }, 1000 * 60 * 5); 
+    
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div data-testid="weekly-view">
@@ -69,8 +97,19 @@ export const WeeklyView = ({
             return (
               <div
                 key={dayDate.getDate()}
-                className="grid grid-rows-[repeat(24, minmax(0, 1fr))] gap-[1px]"
+                className="relative grid grid-rows-[repeat(24, minmax(0, 1fr))] gap-[1px]"
               >
+                {dayDate.getFullYear() >= today.getFullYear() &&
+                  dayDate.getMonth() >= today.getMonth() &&
+                  dayDate.getDate() >= today.getDate() && (
+                    <div
+                      style={{ top: `${currentTimeHeight}px` }}
+                      className="absolute left-0 w-full bg-orange-500  z-10"
+                    >
+                      {isToday(dayDate)&& <div className="h-2 w-2 rounded-full absolute left-[-4px] top-[-3px] bg-orange-500  z-10"></div>}
+                      <div className="w-full h-[2px]   z-10"></div>
+                    </div>
+                  )}
                 {Array.from({ length: 24 }).map((_, hour) => {
                   const taskDate = new Date(dayDate);
                   taskDate.setHours(hour);
