@@ -19,11 +19,7 @@ const isToday = (date: Date) => {
 };
 const findTimeBarHeight = () => {
   const todayTime = new Date();
-  console.log(
-    ((todayTime.getHours() * 60 + todayTime.getMinutes()) / (24 * 60)) *
-      gridHeight *
-      24
-  );
+
   return (
     ((todayTime.getHours() * 60 + todayTime.getMinutes()) / (24 * 60)) *
       gridHeight *
@@ -59,24 +55,27 @@ const WeeklyHeader = ({ selectedDate }: { selectedDate: Date }) => (
 
 export const WeeklyView = ({
   tasks,
-  onAddTask,
+  handleTask,
   selectedDate,
 }: {
   tasks: Task[];
-  onAddTask: (task: Task) => void;
+  handleTask: (task: Task) => void;
   selectedDate: Date;
 }) => {
   selectedDate.setHours(0, 0, 0, 0);
-  const [currentTimeHeight, setCurrentTimeHeight] = useState(findTimeBarHeight());
-  
+  const [currentTimeHeight, setCurrentTimeHeight] = useState(
+    findTimeBarHeight()
+  );
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
+
   useEffect(() => {
     // Update time immediately
     setCurrentTimeHeight(findTimeBarHeight());
-    
+
     const interval = setInterval(() => {
       setCurrentTimeHeight(findTimeBarHeight());
-    }, 1000 * 60 * 5); 
-    
+    }, 1000 * 60 * 5);
+
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
@@ -86,12 +85,27 @@ export const WeeklyView = ({
       <WeeklyHeader selectedDate={selectedDate} />
       <div className="grid grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink">
         <TimeColumn />
-        <div className="w-full grid grid-cols-7 gap-[1px] bg-[hsl(var(--sidebar-border))]">
+        <div className="relative w-full grid grid-cols-7 gap-[1px] bg-[hsl(var(--sidebar-border))]">
           {Array.from({ length: 7 }).map((_, day) => {
             const dayDate = new Date(selectedDate);
             dayDate.setHours(0, 0, 0, 0);
             dayDate.setDate(
               selectedDate.getDate() - selectedDate.getDay() + day
+            );
+            const dailyTasks = tasks.filter((task) => {
+              return (
+                task.startTime.getFullYear() === dayDate.getFullYear() &&
+                task.startTime.getMonth() === dayDate.getMonth() &&
+                task.startTime.getDate() === dayDate.getDate()
+              );
+            });
+            const uniqueStartTimeTasks = dailyTasks.filter(
+              (task, index, self) =>
+                // Keep only the first occurrence of each start time
+                index ===
+                self.findIndex(
+                  (t) => t.startTime.getTime() === task.startTime.getTime()
+                )
             );
 
             return (
@@ -99,22 +113,9 @@ export const WeeklyView = ({
                 key={dayDate.getDate()}
                 className="relative grid grid-rows-[repeat(24, minmax(0, 1fr))] gap-[1px]"
               >
-                {dayDate.getFullYear() >= today.getFullYear() &&
-                  dayDate.getMonth() >= today.getMonth() &&
-                  dayDate.getDate() >= today.getDate() && (
-                    <div
-                      style={{ top: `${currentTimeHeight}px` }}
-                      className="absolute left-0 w-full bg-orange-500  z-10"
-                    >
-                      {isToday(dayDate)&& <div className="h-2 w-2 rounded-full absolute left-[-4px] top-[-3px] bg-orange-500  z-10"></div>}
-                      <div className="w-full h-[2px]   z-10"></div>
-                    </div>
-                  )}
-                {Array.from({ length: 24 }).map((_, hour) => {
-                  const taskDate = new Date(dayDate);
-                  taskDate.setHours(hour);
-
-                  const filteredTasks = tasks
+                {uniqueStartTimeTasks.map((uniqueTask, index: number) => {
+                  const { startTime } = uniqueTask;
+                  const hourTasks = dailyTasks
                     .filter((task) => {
                       const taskStart = new Date(task.startTime);
                       const taskEnd = task.endTime
@@ -123,10 +124,10 @@ export const WeeklyView = ({
 
                       if (taskEnd === null) {
                         // If no end time, only check if after start time
-                        return taskDate >= taskStart;
+                        return startTime >= taskStart;
                       }
 
-                      return taskDate >= taskStart && taskDate < taskEnd;
+                      return startTime >= taskStart && startTime < taskEnd;
                     })
                     .sort((a, b) => {
                       const durationA =
@@ -135,39 +136,84 @@ export const WeeklyView = ({
                       const durationB =
                         new Date(b.endTime).getTime() -
                         new Date(b.startTime).getTime();
-                      return durationB - durationA; // ascending order
+                      return durationB - durationA; // descending order (longest to shortest)
                     });
 
                   return (
-                    <Popover key={hour}>
-                      <PopoverTrigger asChild className="bg-white">
-                        <div className={cn("relative hover:bg-slate-200 ")}>
-                          <div className="w-11/12 relative">
-                            {filteredTasks.map((task, index) => {
-                              return task.startTime.getHours() ===
-                                taskDate.getHours() &&
-                                task.startTime.getDate() ===
-                                  taskDate.getDate() &&
-                                task.startTime.getMonth() ===
-                                  taskDate.getMonth() &&
-                                task.startTime.getFullYear() ===
-                                  taskDate.getFullYear() ? (
-                                <CalendarEvent
-                                  key={index}
-                                  eventData={filteredTasks[index]}
-                                  length={filteredTasks.length}
-                                  index={index}
-                                  onAddTask={onAddTask}
-                                />
-                              ) : null;
-                            })}
-                          </div>
-                        </div>
+                    <div
+                      style={{
+                        top: `${
+                          startTime.getHours() * gridHeight +
+                          1 * startTime.getHours()
+                        }px`,
+                      }}
+                      key={index}
+                      className="w-11/12 absolute left-0 "
+                    >
+                      {hourTasks.map((task, index) => {
+                        return task.startTime.getHours() ===
+                          startTime.getHours() &&
+                          task.startTime.getDate() === startTime.getDate() &&
+                          task.startTime.getMonth() === startTime.getMonth() &&
+                          task.startTime.getFullYear() ===
+                            startTime.getFullYear() ? (
+                          <CalendarEvent
+                            key={index}
+                            eventData={hourTasks[index]}
+                            length={hourTasks.length}
+                            index={index}
+                            handleTask={handleTask}
+                            openPopoverId={openPopoverId}
+                            setOpenPopoverId={setOpenPopoverId}
+                          />
+                        ) : null;
+                      })}
+                    </div>
+                  );
+                })}
+
+                {dayDate.getFullYear() >= today.getFullYear() &&
+                  dayDate.getMonth() >= today.getMonth() &&
+                  dayDate.getDate() >= today.getDate() && (
+                    <div
+                      style={{ top: `${currentTimeHeight}px` }}
+                      className="absolute left-0 w-full bg-orange-500  z-10"
+                    >
+                      {isToday(dayDate) && (
+                        <div className="h-2 w-2 rounded-full absolute left-[-4px] top-[-3px] bg-orange-500  z-10"></div>
+                      )}
+                      <div className="w-full h-[2px]   z-10"></div>
+                    </div>
+                  )}
+                {Array.from({ length: 24 }).map((_, hour) => {
+                  const taskDate = new Date(dayDate);
+                  taskDate.setHours(hour);
+
+                  return (
+                    <Popover
+                      key={hour}
+                   
+                      open={openPopoverId === `${day}-${hour}`}
+                      onOpenChange={(isOpen) => {
+                        setOpenPopoverId(isOpen ? `${day}-${hour}` : null);
+                      }}
+                    >
+                      <PopoverTrigger
+                        asChild
+                        className="bg-white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <div
+                          className={cn("relative hover:bg-slate-200  ")}
+                        ></div>
                       </PopoverTrigger>
                       <PopoverContent className="w-full p-4" side="left">
                         <TaskForm
-                          onAddTask={onAddTask}
+                          handleTask={handleTask}
                           selectedDate={taskDate}
+                          setOpenPopoverId={setOpenPopoverId}
                         />
                       </PopoverContent>
                     </Popover>

@@ -9,8 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { TaskForm } from "../form/form";
 import { Task } from "@/lib/types";
 
@@ -18,16 +16,20 @@ interface CalendarEventProps {
   eventData: Task;
   length: number;
   index: number;
-  onAddTask: (task: Task) => void;
+  handleTask: (task: Task) => void;
+  openPopoverId: string | null;
+  setOpenPopoverId: (id: string | null) => void;
 }
 
 const CalendarEvent: React.FC<CalendarEventProps> = ({
   eventData,
   length,
   index,
-  onAddTask,
+  handleTask,
+  openPopoverId,
+  setOpenPopoverId,
 }) => {
-  const { title, startTime, endTime, description } = eventData;
+  const { id,title, startTime, endTime, description } = eventData;
   const startMinute = startTime.getHours() * 60 + startTime.getMinutes();
   const endMinute = endTime.getHours() * 60 + endTime.getMinutes();
   const durationMinutes = endMinute - startMinute;
@@ -37,7 +39,12 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
     durationMinutes * (gridHeight / 60) + (1 * durationMinutes) / 60;
 
   return (
-    <Popover >
+    <Popover
+      open={openPopoverId === id}
+      onOpenChange={(isOpen) => {
+        setOpenPopoverId(isOpen ? id : null);
+      }}
+    >
       <PopoverTrigger asChild>
         <div
           onClick={(e) => {
@@ -53,7 +60,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
             left: `calc(100% * ${index / length} - ${8 * index}px )`,
           }} //Use inline styles for precise pixel control.
           className={cn(
-            " absolute w-[100%] z-10 border border-white",
+            " absolute w-[100%] z-90 border border-white",
             "bg-blue-500 text-white rounded-md pl-2 z-50"
           )}
         >
@@ -72,10 +79,13 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
       </PopoverTrigger>
       <PopoverContent side="right" className="w-full p-4">
         <TaskForm
-          onAddTask={onAddTask}
+          handleTask={handleTask}
           title={eventData.title}
+          id={eventData.id}
           selectedDate={eventData.startTime}
           endDate={eventData.endTime}
+          operation="edit"
+          setOpenPopoverId={setOpenPopoverId}
         />
       </PopoverContent>
     </Popover>

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Task } from "@/lib/types"; // Import your Task interface
-import { cn } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -30,9 +30,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
 // Adjust formSchema to match Task interface and handle id generation
 const formSchema = z.object({
+  id: z.string().uuid(),
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
   startTime: z.date({ required_error: "Start time is required." }),
   endTime: z.date({ required_error: "End time is required." }),
@@ -40,19 +42,26 @@ const formSchema = z.object({
 });
 
 export const TaskForm = ({
-  onAddTask,
+  handleTask,
   title = "",
   selectedDate,
+  id = "",
   endDate = addHours(selectedDate, 1),
+  operation = "add",
+  setOpenPopoverId,
 }: {
-  onAddTask: (task: Task) => void;
+  handleTask: (task: Task, operation?: string) => void;
   title?: string;
   selectedDate: Date;
+  id?: string;
   endDate?: Date;
+  operation?: "add" | "edit" | "delete";
+  setOpenPopoverId: (id: string | null) => void;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: id || uuidv4(),
       title: title,
       startTime: selectedDate, // Add this
       endTime: endDate, // Add this
@@ -60,18 +69,30 @@ export const TaskForm = ({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Here you would handle form submission
-    //add duration
-    onAddTask({
-      id: "test",
-      ...values,
-    });
-
-    console.log(values);
+    handleTask(
+      {
+        ...values,
+      },
+      operation
+    );
+    setOpenPopoverId(null);
   }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
+        <FormField
+          control={form.control}
+          name="id"
+          render={({ field }) => (
+            <FormItem className="hidden">
+              <FormLabel>id</FormLabel>
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="title"
@@ -218,8 +239,11 @@ export const TaskForm = ({
             )}
           />
         </div>
-
-        <Button type="submit">Schedule Appointment</Button>
+        <div className="flex justify-end">
+          <Button className="w-fit" type="submit">
+            Schedule Appointment
+          </Button>
+        </div>
       </form>
     </Form>
   );

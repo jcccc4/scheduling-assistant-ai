@@ -53,31 +53,50 @@ export const TimeColumn = () => (
 export default function Scheduler() {
   const [view, setView] = useState("weekly");
   const [selectedDate, setSelectedDate] = useState(today);
+
   const [month, setMonth] = useState(new Date().getMonth()); // Set "month" as default
   const [year, setYear] = useState(new Date().getFullYear()); // Set "month" as default
   const [tasks, setTasks] = useState<Task[]>([
     {
-      id: "test",
+      id: "215f16bc-bc5b-4879-bb8b-7a72e859ee56",
       title: "test",
       startTime: new Date(2024, 11, 12, 1),
-      endTime: new Date(2024, 11, 12, 10),
+      endTime: new Date(2024, 11, 12, 6),
     },
     {
-      id: "test",
+      id: "6a99b720-7782-4312-8e86-c938facc1588",
       title: "test",
       startTime: new Date(2024, 11, 12, 1),
       endTime: new Date(2024, 11, 12, 2),
     },
     {
-      id: "test",
+      id: "5550b2c8-1c52-4c85-a1fe-f2c0543b87e8",
       title: "test",
       startTime: new Date(2024, 11, 12, 1),
       endTime: new Date(2024, 11, 12, 3),
     },
+    {
+      id: "5550b2c8-1c52-4c85-a1fe-f2c0543b87e6",
+      title: "tester",
+      startTime: new Date(2024, 11, 12, 8),
+      endTime: new Date(2024, 11, 12, 10),
+    },
   ]);
 
-  const handleAddTask = (task: Task) => {
-    setTasks([...tasks, task]);
+  const handleTask = (task: Task, operation = "add") => {
+    switch (operation) {
+      case "add":
+        setTasks([...tasks, task]);
+        break;
+      case "edit":
+        setTasks(tasks.map((t) => (t.id === task.id ? { ...t, ...task } : t)));
+        break;
+      case "delete":
+        setTasks(tasks.filter((t) => t.id !== task.id));
+        break;
+      default:
+        break;
+    }
   };
 
   const handlePreviousWeek = (
@@ -153,7 +172,7 @@ export default function Scheduler() {
       case "weekly":
         return (
           <WeeklyView
-            onAddTask={handleAddTask}
+            handleTask={handleTask}
             tasks={tasks}
             selectedDate={selectedDate}
           />
