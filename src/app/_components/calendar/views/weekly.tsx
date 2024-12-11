@@ -113,7 +113,7 @@ export const WeeklyView = ({
                 key={dayDate.getDate()}
                 className="relative grid grid-rows-[repeat(24, minmax(0, 1fr))] gap-[1px]"
               >
-                {uniqueStartTimeTasks.map((uniqueTask, index: number) => {
+                {uniqueStartTimeTasks.map((uniqueTask) => {
                   const { startTime } = uniqueTask;
                   const hourTasks = dailyTasks
                     .filter((task) => {
@@ -141,16 +141,19 @@ export const WeeklyView = ({
 
                   return (
                     <div
+                      key={startTime.getTime()}
                       style={{
                         top: `${
                           startTime.getHours() * gridHeight +
                           1 * startTime.getHours()
                         }px`,
                       }}
-                      key={index}
-                      className="w-11/12 absolute left-0 "
+                      className="w-11/12 absolute left-0 animate-fade-in transition-all duration-300 z-50"
                     >
                       {hourTasks.map((task, index) => {
+                        const taskKey =
+                          task.id || `${task.startTime.getTime()}-${index}`;
+
                         return task.startTime.getHours() ===
                           startTime.getHours() &&
                           task.startTime.getDate() === startTime.getDate() &&
@@ -158,8 +161,8 @@ export const WeeklyView = ({
                           task.startTime.getFullYear() ===
                             startTime.getFullYear() ? (
                           <CalendarEvent
-                            key={index}
-                            eventData={hourTasks[index]}
+                            key={taskKey}
+                            eventData={task}
                             length={hourTasks.length}
                             index={index}
                             handleTask={handleTask}
@@ -192,7 +195,6 @@ export const WeeklyView = ({
                   return (
                     <Popover
                       key={hour}
-                   
                       open={openPopoverId === `${day}-${hour}`}
                       onOpenChange={(isOpen) => {
                         setOpenPopoverId(isOpen ? `${day}-${hour}` : null);

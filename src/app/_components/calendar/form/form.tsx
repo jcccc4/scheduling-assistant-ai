@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { add, addHours, format } from "date-fns";
+import {  addHours, format } from "date-fns";
 import { CalendarIcon, Clock } from "lucide-react";
 import {
   Select,
@@ -30,7 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
 
 // Adjust formSchema to match Task interface and handle id generation
 const formSchema = z.object({
@@ -87,7 +86,7 @@ export const TaskForm = ({
         <FormField
           control={form.control}
           name="id"
-          render={({ field }) => (
+          render={() => (
             <FormItem className="hidden">
               <FormLabel>id</FormLabel>
             </FormItem>

@@ -54,8 +54,8 @@ export default function Scheduler() {
   const [view, setView] = useState("weekly");
   const [selectedDate, setSelectedDate] = useState(today);
 
-  const [month, setMonth] = useState(new Date().getMonth()); // Set "month" as default
-  const [year, setYear] = useState(new Date().getFullYear()); // Set "month" as default
+  // const [month, setMonth] = useState(new Date().getMonth()); // Set "month" as default
+  // const [year, setYear] = useState(new Date().getFullYear()); // Set "month" as default
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: "215f16bc-bc5b-4879-bb8b-7a72e859ee56",

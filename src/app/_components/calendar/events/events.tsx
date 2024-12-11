@@ -61,7 +61,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
           }} //Use inline styles for precise pixel control.
           className={cn(
             " absolute w-[100%] z-90 border border-white",
-            "bg-blue-500 text-white rounded-md pl-2 z-50"
+            "bg-blue-500 text-white rounded-md pl-2 z-50 animate-fade-in transition-all duration-500"
           )}
         >
           <div className="font-semibold text-sm truncate">{title}</div>
