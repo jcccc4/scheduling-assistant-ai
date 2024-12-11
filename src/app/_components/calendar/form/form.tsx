@@ -41,17 +41,21 @@ const formSchema = z.object({
 
 export const TaskForm = ({
   onAddTask,
+  title = "",
   selectedDate,
+  endDate = addHours(selectedDate, 1),
 }: {
   onAddTask: (task: Task) => void;
+  title?: string;
   selectedDate: Date;
+  endDate?: Date;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+      title: title,
       startTime: selectedDate, // Add this
-      endTime: addHours(selectedDate, 1), // Add this
+      endTime: endDate, // Add this
     },
   });
 
@@ -190,7 +194,6 @@ export const TaskForm = ({
                 <Select
                   value={field.value.getHours().toString()}
                   onValueChange={(e) => {
-                    console.log(field.value);
                     const timeNumber = Number(e);
                     const newDate = new Date(field.value);
                     newDate.setHours(timeNumber);

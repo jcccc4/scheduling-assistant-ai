@@ -154,12 +154,10 @@ export const WeeklyView = ({
                                   taskDate.getFullYear() ? (
                                 <CalendarEvent
                                   key={index}
-                                  title={filteredTasks[index].title}
-                                  startTime={filteredTasks[index].startTime}
-                                  endTime={filteredTasks[index].endTime}
-                                  description={filteredTasks[index].description}
+                                  eventData={filteredTasks[index]}
                                   length={filteredTasks.length}
                                   index={index}
+                                  onAddTask={onAddTask}
                                 />
                               ) : null;
                             })}
