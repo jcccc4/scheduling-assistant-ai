@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import {  addHours, format } from "date-fns";
+import { addHours, format } from "date-fns";
 import { CalendarIcon, Clock } from "lucide-react";
 import {
   Select,
@@ -74,6 +74,11 @@ export const TaskForm = ({
       },
       operation
     );
+    setOpenPopoverId(null);
+  }
+
+  function onDelete() {
+    handleTask({ ...form.getValues() }, "delete");
     setOpenPopoverId(null);
   }
 
@@ -131,7 +136,7 @@ export const TaskForm = ({
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverContent className="w-auto p-0 z-50" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value}
@@ -161,7 +166,7 @@ export const TaskForm = ({
                     <Clock className="ml-auto h-4 w-4 opacity-50" />
                   </SelectTrigger>
 
-                  <SelectContent>
+                  <SelectContent className="z-50">
                     {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
                       <SelectItem key={hour} value={String(hour)}>
                         {`${hour.toString().padStart(2, "0")}:00`}
@@ -195,7 +200,7 @@ export const TaskForm = ({
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverContent className="w-auto p-0 z-50" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value}
@@ -225,7 +230,7 @@ export const TaskForm = ({
                     <Clock className="ml-auto h-4 w-4 opacity-50" />
                   </SelectTrigger>
 
-                  <SelectContent>
+                  <SelectContent className="z-50">
                     {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
                       <SelectItem key={hour} value={String(hour)}>
                         {`${hour.toString().padStart(2, "0")}:00`}
@@ -238,9 +243,14 @@ export const TaskForm = ({
             )}
           />
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          {operation === "edit" && (
+            <Button type="button" variant="destructive" onClick={onDelete}>
+              Delete
+            </Button>
+          )}
           <Button className="w-fit" type="submit">
-            Schedule Appointment
+            {operation === "edit" ? "Update" : "Schedule"} Appointment
           </Button>
         </div>
       </form>

@@ -3,7 +3,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DAYS, gridHeight, TimeColumn, today } from "../calendar";
+import { DAYS, gridHeight, today } from "../calendar";
+import { TimeColumn } from "../components/TimeColumn";
 import { Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import CalendarEvent from "../events/events";
@@ -19,17 +20,14 @@ const isToday = (date: Date) => {
 };
 const findTimeBarHeight = () => {
   const todayTime = new Date();
+  const hours = todayTime.getHours();
+  const minutes = todayTime.getMinutes();
 
-  return (
-    ((todayTime.getHours() * 60 + todayTime.getMinutes()) / (24 * 60)) *
-      gridHeight *
-      24 +
-    12
-  );
+  return hours * gridHeight + (minutes / 60) * gridHeight + hours;
 };
 
 const WeeklyHeader = ({ selectedDate }: { selectedDate: Date }) => (
-  <div className="grid grid-cols-[60px_1fr] grid-rows-[80px] w-full bg-[hsl(var(--sidebar-border))] gap-[1px] py-[1px] sticky top-0">
+  <div className="grid grid-cols-[60px_1fr] grid-rows-[80px] w-full bg-[hsl(var(--sidebar-border))] gap-[1px] py-[1px] sticky top-0 z-[40] bg-white">
     <div className="w-full bg-white flex items-center justify-center">
       <div className="flex gap-2"></div>
     </div>
@@ -69,23 +67,20 @@ export const WeeklyView = ({
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Update time immediately
-    setCurrentTimeHeight(findTimeBarHeight());
-
+    // Update time bar position every 
     const interval = setInterval(() => {
       setCurrentTimeHeight(findTimeBarHeight());
-    }, 1000 * 60 * 5);
+    }, 1000);
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div data-testid="weekly-view">
+    <div data-testid="weekly-view" className="relative h-fit">
       <WeeklyHeader selectedDate={selectedDate} />
-      <div className="grid grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink">
-        <TimeColumn />
-        <div className="relative w-full grid grid-cols-7 gap-[1px] bg-[hsl(var(--sidebar-border))]">
+      <div className="grid grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto">
+        <TimeColumn gridHeight={gridHeight} />
+        <div className="relative w-full  grid grid-cols-7 gap-[1px] bg-[hsl(var(--sidebar-border))]">
           {Array.from({ length: 7 }).map((_, day) => {
             const dayDate = new Date(selectedDate);
             dayDate.setHours(0, 0, 0, 0);
@@ -148,7 +143,7 @@ export const WeeklyView = ({
                           1 * startTime.getHours()
                         }px`,
                       }}
-                      className="w-11/12 absolute left-0 animate-fade-in transition-all duration-300 z-50"
+                      className="w-11/12 absolute left-0 animate-fade-in transition-all duration-300 z-10"
                     >
                       {hourTasks.map((task, index) => {
                         const taskKey =
@@ -191,7 +186,6 @@ export const WeeklyView = ({
                 {Array.from({ length: 24 }).map((_, hour) => {
                   const taskDate = new Date(dayDate);
                   taskDate.setHours(hour);
-
                   return (
                     <Popover
                       key={hour}
@@ -211,7 +205,10 @@ export const WeeklyView = ({
                           className={cn("relative hover:bg-slate-200  ")}
                         ></div>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-4" side="left">
+                      <PopoverContent
+                        className="w-full p-4 z-[10000]"
+                        side="left"
+                      >
                         <TaskForm
                           handleTask={handleTask}
                           selectedDate={taskDate}
