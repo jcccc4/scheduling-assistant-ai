@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AddTaskDialog } from "./AddTaskDialog";
+// import { AddTaskDialog } from "./AddTaskDialog";
 import { MONTHS, today } from "../calendar";
 import { Task } from "@/lib/types";
 
@@ -27,7 +27,6 @@ export const CalendarHeader = ({
   setView,
   onPreviousWeek,
   onNextWeek,
-  handleTask,
 }: HeaderProps) => {
   return (
     <header className="h-14 bg-white flex items-center justify-between text-xl px-4 shrink-0">

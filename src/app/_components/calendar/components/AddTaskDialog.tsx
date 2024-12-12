@@ -54,13 +54,13 @@ const formSchema = z.object({
   description: z.string().optional(),
 });
 
-const durations = [
-  { value: "15", label: "15 minutes" },
-  { value: "30", label: "30 minutes" },
-  { value: "60", label: "1 hour" },
-  { value: "120", label: "2 hours" },
-  { value: "180", label: "3 hours" },
-];
+// const durations = [
+//   { value: "15", label: "15 minutes" },
+//   { value: "30", label: "30 minutes" },
+//   { value: "60", label: "1 hour" },
+//   { value: "120", label: "2 hours" },
+//   { value: "180", label: "3 hours" },
+// ];
 
 export const AddTaskDialog = ({ handleTask }: AddTaskDialogProps) => {
   const now = new Date();
