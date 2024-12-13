@@ -118,14 +118,19 @@ export default function Scheduler() {
   };
 
   useEffect(() => {
-    if (timeBarRef.current) {
-      setIsLoading(false);
-      const currentHeight = findTimeBarHeight();
-      // Subtract some offset (e.g., 100px) to show some time slots above the current time
-      const offset = 100;
-      timeBarRef.current.scrollTop = Math.max(0, currentHeight - offset);
-    }
-  }, [view]);
+    const timer = setTimeout(() => {
+      if (timeBarRef.current) {
+        setIsLoading(false);
+        const currentHeight = findTimeBarHeight();
+        // Subtract some offset (e.g., 100px) to show some time slots above the current time
+        const offset = 100;
+        timeBarRef.current.scrollTop = Math.max(0, currentHeight - offset);
+      }
+    }, 0);
+
+    // Cleanup the timer
+    return () => clearTimeout(timer);
+  }, [isLoading, view]);
 
   return (
     <>
@@ -139,7 +144,7 @@ export default function Scheduler() {
         />
         <div
           ref={timeBarRef}
-          className="bg-[hsl(var(--sidebar-border))] flex flex-col text-xs w-full grow overflow-auto"
+          className="bg-[hsl(var(--sidebar-border))]  flex flex-col text-xs w-full grow overflow-auto"
         >
           {isLoading ? (
             <div className="flex flex-col h-screen items-center justify-center">
