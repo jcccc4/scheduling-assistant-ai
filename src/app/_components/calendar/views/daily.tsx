@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { TaskForm } from "../form/form";
 import CalendarEvent from "../events/events";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DailyViewProps {
   tasks: Task[];
@@ -49,7 +50,7 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
 
   return (
     <div data-testid="daily-view" className="relative h-fit">
-      <div className="grid grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto">
+      <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto">
         <TimeColumn gridHeight={gridHeight} />
         <div className="relative w-full">
           <div className="relative">
@@ -115,14 +116,15 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
                   <PopoverTrigger asChild>
                     <div
                       className={cn(
-                        "relative hover:bg-slate-100 h-[50px] border-b border-gray-200 cursor-pointer"
+                        "relative hover:bg-slate-100 h-[40px] md:h-[50px] border-b border-gray-200 cursor-pointer"
                       )}
                       onClick={(e) => e.stopPropagation()}
+               
                     />
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 p-4" side="left">
+                  <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4" side={useIsMobile() ? "bottom" : "left"}>
                     <TaskForm
-                      handleTask={handleTask}
+                      handleTask={handleTask} 
                       selectedDate={taskDate}
                       setOpenPopoverId={setOpenPopoverId}
                     />

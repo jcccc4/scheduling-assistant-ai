@@ -64,8 +64,8 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
             "bg-blue-500 text-white rounded-md pl-2  animate-fade-in transition-all duration-500"
           )}
         >
-          <div className="font-semibold text-sm truncate">{title}</div>
-          <div className="text-xs text-white/90">
+          <div className="font-semibold text-[10px] md:text-sm truncate">{title}</div>
+          <div className="text-[8px] md:text-xs text-white/90">
             {formatTime(startTime)}
             {" - "}
             {formatTime(endTime)}
@@ -77,7 +77,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
           )}
         </div>
       </PopoverTrigger>
-      <PopoverContent side="right" className="w-full p-4">
+      <PopoverContent side="right" className="w-[280px] md:w-full p-2 md:p-4">
         <TaskForm
           handleTask={handleTask}
           title={eventData.title}

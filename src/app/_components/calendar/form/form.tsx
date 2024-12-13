@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -30,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 // Adjust formSchema to match Task interface and handle id generation
 const formSchema = z.object({
@@ -86,7 +88,7 @@ export const TaskForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-3 md:gap-4"
       >
         <FormField
           control={form.control}
@@ -102,7 +104,7 @@ export const TaskForm = ({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel >Name</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -249,7 +251,7 @@ export const TaskForm = ({
               Delete
             </Button>
           )}
-          <Button className="w-fit" type="submit">
+          <Button type="submit">
             {operation === "edit" ? "Update" : "Schedule"} Appointment
           </Button>
         </div>

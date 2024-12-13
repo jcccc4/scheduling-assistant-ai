@@ -29,11 +29,11 @@ export const CalendarHeader = ({
   onNextWeek,
 }: HeaderProps) => {
   return (
-    <header className="h-14 bg-white flex items-center justify-between text-xl px-4 shrink-0">
-      <div className="flex items-center gap-4">
-        <div>
+    <header className="h-12 md:h-14 bg-white flex items-center justify-between text-lg md:text-xl px-2 md:px-4 shrink-0">
+      <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex gap-1 md:gap-2">
           <SidebarTrigger />
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="text-xs md:text-sm">
             Today
           </Button>
           <Button variant="ghost" size="icon" onClick={onPreviousWeek}>
@@ -50,10 +50,10 @@ export const CalendarHeader = ({
       <div className="flex items-center gap-4">
         {/* <AddTaskDialog handleTask={handleTask} /> */}
         <Select value={view} onValueChange={setView}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[140px] md:w-[180px] text-xs md:text-sm">
             <SelectValue placeholder="Select view" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="text-xs md:text-sm">
             <SelectGroup>
               <SelectItem value="daily">Daily</SelectItem>
               <SelectItem value="weekly">Weekly</SelectItem>

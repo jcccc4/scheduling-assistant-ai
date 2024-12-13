@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import CalendarEvent from "../events/events";
 import { TaskForm } from "../form/form";
 import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const isToday = (date: Date) => {
   return (
@@ -27,7 +28,7 @@ const findTimeBarHeight = () => {
 };
 
 const WeeklyHeader = ({ selectedDate }: { selectedDate: Date }) => (
-  <div className="grid grid-cols-[60px_1fr] grid-rows-[80px] w-full bg-[hsl(var(--sidebar-border))] gap-[1px] py-[1px] sticky top-0 z-[40] bg-white">
+  <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] grid-rows-[60px] md:grid-rows-[80px] w-full bg-[hsl(var(--sidebar-border))] gap-[1px] py-[1px] sticky top-0 z-[40] bg-white overflow-x-auto">
     <div className="w-full bg-white flex items-center justify-center">
       <div className="flex gap-2"></div>
     </div>
@@ -38,12 +39,12 @@ const WeeklyHeader = ({ selectedDate }: { selectedDate: Date }) => (
         return (
           <div
             key={index}
-            className={`bg-white h-full w-full flex p-2 flex-col ${
+            className={`bg-white h-full w-full flex p-1 md:p-2 flex-col ${
               isToday(day) ? "text-blue-700 font-semibold" : ""
             }`}
           >
-            <span className="text-3xl">{day.getDate()}</span>
-            <span className="text-base">{DAYS[day.getDay()]}</span>
+            <span className="text-lg md:text-3xl">{day.getDate()}</span>
+            <span className="text-xs md:text-base">{DAYS[day.getDay()]}</span>
           </div>
         );
       })}
@@ -78,7 +79,7 @@ export const WeeklyView = ({
   return (
     <div data-testid="weekly-view" className="relative h-fit">
       <WeeklyHeader selectedDate={selectedDate} />
-      <div className="grid grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto">
+      <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto">
         <TimeColumn gridHeight={gridHeight} />
         <div className="relative w-full  grid grid-cols-7 gap-[1px] bg-[hsl(var(--sidebar-border))]">
           {Array.from({ length: 7 }).map((_, day) => {
@@ -202,12 +203,12 @@ export const WeeklyView = ({
                         }}
                       >
                         <div
-                          className={cn("relative hover:bg-slate-200  ")}
+                          className={cn("relative hover:bg-slate-200 min-h-[40px] md:min-h-[50px]")}
                         ></div>
                       </PopoverTrigger>
                       <PopoverContent
                         className="w-full p-4 z-[10000]"
-                        side="left"
+                        side={useIsMobile() ? "bottom" : "left"}
                       >
                         <TaskForm
                           handleTask={handleTask}

@@ -10,7 +10,7 @@ export const TimeColumn = ({ gridHeight }: TimeColumnProps) => (
     {Array.from({ length: 24 }).map((_, index) => (
       <div
         key={index}
-        className="bg-white w-full flex items-start justify-center pt-2"
+        className="bg-white w-full flex items-start justify-center pt-1 md:pt-2 text-[10px] md:text-xs"
       >
         {formatSimpleTime(index)}
       </div>
