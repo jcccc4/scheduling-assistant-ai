@@ -13,6 +13,7 @@ import {
 // import { AddTaskDialog } from "./AddTaskDialog";
 import { MONTHS, today } from "../calendar";
 import { Task } from "@/lib/types";
+import { AddTaskDialog } from "./AddTaskDialog";
 
 interface HeaderProps {
   view: string;
@@ -27,6 +28,7 @@ export const CalendarHeader = ({
   setView,
   onPreviousWeek,
   onNextWeek,
+  handleTask,
 }: HeaderProps) => {
   return (
     <header className="h-12 md:h-14 bg-white flex items-center justify-between text-lg md:text-xl px-2 md:px-4 shrink-0">
@@ -48,7 +50,7 @@ export const CalendarHeader = ({
         } ${today.getFullYear()}`}</h1>
       </div>
       <div className="flex items-center gap-4">
-        {/* <AddTaskDialog handleTask={handleTask} /> */}
+        <AddTaskDialog handleTask={handleTask} />
         <Select value={view} onValueChange={setView}>
           <SelectTrigger className="w-[140px] md:w-[180px] text-xs md:text-sm">
             <SelectValue placeholder="Select view" />

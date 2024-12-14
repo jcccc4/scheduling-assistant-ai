@@ -66,9 +66,10 @@ export const WeeklyView = ({
     findTimeBarHeight()
   );
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
-
+  const isMobile = useIsMobile();
+  
   useEffect(() => {
-    // Update time bar position every 
+    // Update time bar position every
     const interval = setInterval(() => {
       setCurrentTimeHeight(findTimeBarHeight());
     }, 1000);
@@ -203,12 +204,14 @@ export const WeeklyView = ({
                         }}
                       >
                         <div
-                          className={cn("relative hover:bg-slate-200 min-h-[40px] md:min-h-[50px]")}
+                          className={cn(
+                            "relative hover:bg-slate-200 min-h-[40px] md:min-h-[50px]"
+                          )}
                         ></div>
                       </PopoverTrigger>
                       <PopoverContent
                         className="w-full p-4 z-[10000]"
-                        side={useIsMobile() ? "bottom" : "left"}
+                        side={isMobile ? "bottom" : "left"}
                       >
                         <TaskForm
                           handleTask={handleTask}

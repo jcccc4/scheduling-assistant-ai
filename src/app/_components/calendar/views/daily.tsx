@@ -20,7 +20,7 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
   selectedDate.setHours(0, 0, 0, 0);
   const [currentTimeHeight, setCurrentTimeHeight] = useState(0);
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
-
+  const isMobile = useIsMobile();
   useEffect(() => {
     const updateTimeBar = () => {
       const now = new Date();
@@ -122,7 +122,7 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
                
                     />
                   </PopoverTrigger>
-                  <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4" side={useIsMobile() ? "bottom" : "left"}>
+                  <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4" side={isMobile ? "bottom" : "left"}>
                     <TaskForm
                       handleTask={handleTask} 
                       selectedDate={taskDate}
