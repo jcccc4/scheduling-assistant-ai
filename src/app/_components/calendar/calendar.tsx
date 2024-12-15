@@ -43,32 +43,32 @@ export default function Scheduler() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
 
-  // const [optimisticTasks, addOptimisticTask] = useOptimistic(
-  //   tasks,
-  //   (state: Task[], action: OptimisticAction) => {
-  //     switch (action.type) {
-  //       case "add":
-  //         return [...state, action.task];
-  //       case "edit":
-  //         return state.map((t) =>
-  //           t.id === action.task.id ? { ...t, ...action.task } : t
-  //         );
-  //       case "delete":
-  //         return state.filter((t) => t.id !== action.task.id);
-  //       default:
-  //         return state;
-  //     }
-  //   }
-  // );
+  const [optimisticTasks, addOptimisticTask] = useOptimistic(
+    tasks,
+    (state: Task[], action: OptimisticAction) => {
+      switch (action.type) {
+        case "add":
+          return [...state, action.task];
+        case "edit":
+          return state.map((t) =>
+            t.id === action.task.id ? { ...t, ...action.task } : t
+          );
+        case "delete":
+          return state.filter((t) => t.id !== action.task.id);
+        default:
+          return state;
+      }
+    }
+  );
   const handleTask = async (task: Task, operation = "add") => {
     try {
       // Optimistically update the UI
-      // startTransition(() => {
-      //   addOptimisticTask({
-      //     task,
-      //     type: operation as "add" | "edit" | "delete",
-      //   });
-      // });
+      startTransition(() => {
+        addOptimisticTask({
+          task,
+          type: operation as "add" | "edit" | "delete",
+        });
+      });
 
       // Then perform the API call
       let serverTask: Task;
@@ -174,7 +174,7 @@ export default function Scheduler() {
     >
       <WeeklyView
             handleTask={handleTask}
-            tasks={tasks}
+            tasks={optimisticTasks}
             selectedDate={selectedDate}
           />
     </CalendarLayout>
