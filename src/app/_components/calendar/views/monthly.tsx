@@ -5,7 +5,7 @@ import { Task } from "@/lib/types";
 import { useState } from "react";
 import { formatTime } from "@/utilities/formatSimpleTime";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { TaskForm } from "../form/form";
+import { EventForm } from "../form/EventForm";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -115,7 +115,7 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                     </div>
                   </PopoverTrigger>
                   <PopoverContent className="w-80 p-4">
-                    <TaskForm
+                    <EventForm
                       handleTask={handleTask}
                       title={task.title}
                       id={task.id}
@@ -152,7 +152,7 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                             </div>
                           </PopoverTrigger>
                           <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4">
-                            <TaskForm
+                            <EventForm
                               handleTask={handleTask}
                               title={task.title}
                               id={task.id}
@@ -177,7 +177,7 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                 />
               </DialogTrigger>
               <DialogContent className="w-[90vw] md:w-96">
-                <TaskForm
+                <EventForm
                   handleTask={handleTask}
                   selectedDate={date || selectedDate}
                   setOpenPopoverId={setOpenPopoverId}

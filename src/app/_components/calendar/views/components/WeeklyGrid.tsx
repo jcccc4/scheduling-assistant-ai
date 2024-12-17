@@ -2,7 +2,7 @@
 import { Task } from "@/lib/types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { TaskForm } from "../../form/form";
+import { TaskForm } from "../../form/EventForm";
 import CalendarEvent from "../../events/events";
 import { isToday } from "../../components/utils";
 import { TimeColumn } from "../../components/TimeColumn";

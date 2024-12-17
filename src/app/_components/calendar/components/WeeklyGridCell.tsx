@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { TaskForm } from "../form/form";
+import { TaskForm } from "../form/EventForm";
 import { Task } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-mobile";
 

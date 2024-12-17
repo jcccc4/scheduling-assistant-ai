@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { TaskForm } from '../form/form';
+import { TaskForm } from '../form/EventForm';
 
 interface TaskListProps {
   tasks: Task[];

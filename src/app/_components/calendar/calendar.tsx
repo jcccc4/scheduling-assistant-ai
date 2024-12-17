@@ -121,7 +121,7 @@ export default function Scheduler() {
         return (
           <DailyView
             handleTask={handleTask}
-            tasks={tasks}
+            tasks={optimisticTasks}
             selectedDate={selectedDate}
           />
         );
@@ -129,7 +129,7 @@ export default function Scheduler() {
         return (
           <WeeklyView
             handleTask={handleTask}
-            tasks={tasks}
+            tasks={optimisticTasks}
             selectedDate={selectedDate}
           
           />
@@ -138,7 +138,7 @@ export default function Scheduler() {
         return (
           <MonthlyView
             handleTask={handleTask}
-            tasks={tasks}
+            tasks={optimisticTasks}
             selectedDate={selectedDate}
           />
         );

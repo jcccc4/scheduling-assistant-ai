@@ -8,7 +8,7 @@ import { TimeColumn } from "../components/TimeColumn";
 import { Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import CalendarEvent from "../events/events";
-import { TaskForm } from "../form/form";
+import { EventForm } from "../form/EventForm";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -225,7 +225,7 @@ export const WeeklyView = ({
                           className="w-full p-4 z-[10000]"
                           side={isMobile ? "bottom" : "left"}
                         >
-                          <TaskForm
+                          <EventForm
                             handleTask={handleTask}
                             selectedDate={taskDate}
                             setOpenPopoverId={setOpenPopoverId}

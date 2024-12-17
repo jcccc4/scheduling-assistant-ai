@@ -6,7 +6,7 @@ import { gridHeight, today } from "../calendar";
 import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { TaskForm } from "../form/form";
+import { EventForm } from "../form/EventForm";
 import CalendarEvent from "../events/events";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -123,7 +123,7 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
                     />
                   </PopoverTrigger>
                   <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4" side={isMobile ? "bottom" : "left"}>
-                    <TaskForm
+                    <EventForm
                       handleTask={handleTask} 
                       selectedDate={taskDate}
                       setOpenPopoverId={setOpenPopoverId}

@@ -41,7 +41,7 @@ const formSchema = z.object({
   description: z.string().optional(),
 });
 
-export const TaskForm = ({
+export const EventForm = ({
   handleTask,
   title = "",
   selectedDate,
@@ -56,7 +56,7 @@ export const TaskForm = ({
   id?: string;
   endDate?: Date;
   operation?: "add" | "edit" | "delete";
-  setOpenPopoverId: (id: string | null) => void;
+  setOpenPopoverId?: (id: string | null) => void;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,19 +75,23 @@ export const TaskForm = ({
       },
       operation
     );
-    setOpenPopoverId(null);
+    if (setOpenPopoverId) {
+      setOpenPopoverId(null);
+    }
   }
 
   function onDelete() {
     handleTask({ ...form.getValues() }, "delete");
-    setOpenPopoverId(null);
+    if (setOpenPopoverId) {
+      setOpenPopoverId(null);
+    }
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-3 md:gap-4"
+        className="flex flex-col gap-3 md:gap-4 relative max-w-full"
       >
         <FormField
           control={form.control}
@@ -103,9 +107,9 @@ export const TaskForm = ({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel >Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input className="relative w-full" {...field} />
               </FormControl>
               <FormDescription>
                 Enter your full name for the appointment.

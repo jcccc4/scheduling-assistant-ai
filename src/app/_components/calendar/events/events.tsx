@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TaskForm } from "../form/form";
+import { EventForm } from "../form/EventForm";
 import { Task } from "@/lib/types";
 
 interface CalendarEventProps {
@@ -29,7 +29,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
   openPopoverId,
   setOpenPopoverId,
 }) => {
-  const { id,title, startTime, endTime, description } = eventData;
+  const { id, title, startTime, endTime, description } = eventData;
   const startMinute = startTime.getHours() * 60 + startTime.getMinutes();
   const endMinute = endTime.getHours() * 60 + endTime.getMinutes();
   const durationMinutes = endMinute - startMinute;
@@ -64,7 +64,9 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
             "bg-blue-500 text-white rounded-md pl-2  animate-fade-in transition-all duration-500"
           )}
         >
-          <div className="font-semibold text-[10px] md:text-sm truncate">{title}</div>
+          <div className="font-semibold text-[10px] md:text-sm truncate">
+            {title}
+          </div>
           <div className="text-[8px] md:text-xs text-white/90">
             {formatTime(startTime)}
             {" - "}
@@ -78,7 +80,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
         </div>
       </PopoverTrigger>
       <PopoverContent side="right" className="w-[280px] md:w-full p-2 md:p-4">
-        <TaskForm
+        <EventForm
           handleTask={handleTask}
           title={eventData.title}
           id={eventData.id}
