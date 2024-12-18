@@ -10,7 +10,13 @@ import { cn } from "@/lib/utils";
 import CalendarEvent from "../events/events";
 import { EventForm } from "../form/EventForm";
 import { useEffect, useRef, useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 const isToday = (date: Date) => {
   return (
@@ -28,22 +34,22 @@ const findTimeBarHeight = () => {
 };
 
 const WeeklyHeader = ({ selectedDate }: { selectedDate: Date }) => (
-  <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] grid-rows-[60px] md:grid-rows-[80px] w-full bg-[hsl(var(--sidebar-border))] gap-[1px] py-[1px] sticky top-0 z-[40] bg-white overflow-x-auto">
-    <div className="w-full bg-white flex items-center justify-center">
+  <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] grid-rows-[60px] md:grid-rows-[80px] w-full bg-[hsl(var(--sidebar-border))] gap-[1px] py-[1px]  sticky top-0 z-[50]  overflow-x-auto">
+    <div className="bg-white w-full flex items-center justify-center">
       <div className="flex gap-2"></div>
     </div>
     <div className="w-full grid grid-cols-7 gap-[1px]">
-      {Array.from({ length: 7 }).map((_, index) => {
+      {Array.from({ length: 7 }).map((_, index: number) => {
         const day = new Date(selectedDate);
         day.setDate(selectedDate.getDate() - selectedDate.getDay() + index);
         return (
           <div
             key={index}
-            className={`bg-white h-full w-full flex p-1 md:p-2 flex-col ${
+            className={`bg-white h-full w-full flex  md:p-2 flex-col  ${
               isToday(day) ? "text-blue-700 font-semibold" : ""
             }`}
           >
-            <span className="text-lg md:text-3xl">{day.getDate()}</span>
+            <span className="text-lg md:text-3xl  ">{day.getDate()}</span>
             <span className="text-xs md:text-base">{DAYS[day.getDay()]}</span>
           </div>
         );
@@ -56,18 +62,21 @@ export const WeeklyView = ({
   tasks,
   handleTask,
   selectedDate,
+
+  openPopoverId,
+  setOpenPopoverId,
 }: {
   tasks: Task[];
   handleTask: (task: Task) => void;
   selectedDate: Date;
+  openPopoverId: string | null;
+  setOpenPopoverId: (id: string | null) => void;
 }) => {
   selectedDate.setHours(0, 0, 0, 0);
   const [currentTimeHeight, setCurrentTimeHeight] = useState(
     findTimeBarHeight()
   );
   const timeBarRef = useRef<HTMLDivElement | null>(null);
-  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     // Update time bar position every
@@ -77,7 +86,7 @@ export const WeeklyView = ({
 
     return () => clearInterval(interval);
   }, []);
-  
+
   useEffect(() => {
     if (timeBarRef.current) {
       timeBarRef.current.scrollTop = 400;
@@ -119,7 +128,7 @@ export const WeeklyView = ({
               return (
                 <div
                   key={dayDate.getDate()}
-                  className="relative grid grid-rows-[repeat(24, minmax(0, 1fr))] gap-[1px]"
+                  className="relative grid grid-rows-[repeat(24, minmax(0, 1fr))] gap-[1px] "
                 >
                   {uniqueStartTimeTasks.map((uniqueTask) => {
                     const { startTime } = uniqueTask;
@@ -134,7 +143,6 @@ export const WeeklyView = ({
                           // If no end time, only check if after start time
                           return startTime >= taskStart;
                         }
-
                         return startTime >= taskStart && startTime < taskEnd;
                       })
                       .sort((a, b) => {
@@ -146,7 +154,7 @@ export const WeeklyView = ({
                           new Date(b.startTime).getTime();
                         return durationB - durationA; // descending order (longest to shortest)
                       });
-
+                      console.log(hourTasks)
                     return (
                       <div
                         key={startTime.getTime()}
@@ -161,7 +169,7 @@ export const WeeklyView = ({
                         {hourTasks.map((task, index) => {
                           const taskKey =
                             task.id || `${task.startTime.getTime()}-${index}`;
-
+                     
                           return task.startTime.getHours() ===
                             startTime.getHours() &&
                             task.startTime.getDate() === startTime.getDate() &&
@@ -201,14 +209,14 @@ export const WeeklyView = ({
                     const taskDate = new Date(dayDate);
                     taskDate.setHours(hour);
                     return (
-                      <Popover
+                      <Dialog
                         key={hour}
                         open={openPopoverId === `${day}-${hour}`}
                         onOpenChange={(isOpen) => {
                           setOpenPopoverId(isOpen ? `${day}-${hour}` : null);
                         }}
                       >
-                        <PopoverTrigger
+                        <DialogTrigger
                           asChild
                           className="bg-white"
                           onClick={(e) => {
@@ -220,18 +228,21 @@ export const WeeklyView = ({
                               "relative hover:bg-slate-200 min-h-[40px] md:min-h-[50px]"
                             )}
                           ></div>
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-full p-4 z-[10000]"
-                          side={isMobile ? "bottom" : "left"}
-                        >
+                        </DialogTrigger>
+                        <DialogContent className="w-full p-4 z-[10000]">
+                          <VisuallyHidden.Root>
+                            <DialogTitle>
+                              Create Event for {taskDate.toLocaleDateString()}{" "}
+                              at {hour}:00
+                            </DialogTitle>
+                          </VisuallyHidden.Root>
                           <EventForm
                             handleTask={handleTask}
                             selectedDate={taskDate}
                             setOpenPopoverId={setOpenPopoverId}
                           />
-                        </PopoverContent>
-                      </Popover>
+                        </DialogContent>
+                      </Dialog>
                     );
                   })}
                 </div>

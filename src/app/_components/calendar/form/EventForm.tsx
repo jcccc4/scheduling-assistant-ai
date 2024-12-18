@@ -56,7 +56,7 @@ export const EventForm = ({
   id?: string;
   endDate?: Date;
   operation?: "add" | "edit" | "delete";
-  setOpenPopoverId?: (id: string | null) => void;
+  setOpenPopoverId: (id: string | null) => void;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -9,18 +9,29 @@ import {
 } from "@/components/ui/dialog";
 
 import { Task } from "@/lib/types";
-import { Form } from "@/components/ui/form";
+
 import { EventForm } from "../form/EventForm";
 
 export const AddTaskDialog = ({
   handleTask,
+  openPopoverId,
+  setOpenPopoverId,
 }: {
   handleTask: (task: Task, operation?: string) => void;
+  openPopoverId: string | null;
+  setOpenPopoverId: (id: string | null) => void;
 }) => {
   const taskDate = new Date();
+  taskDate.setHours(taskDate.getHours(), 0, 0, 0);
+  taskDate.setHours(taskDate.getHours() + 1);
 
   return (
-    <Dialog>
+    <Dialog
+      open={openPopoverId === `add-task`}
+      onOpenChange={(isOpen) => {
+        setOpenPopoverId(isOpen ? `add-task` : null);
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="default" size="sm">
           Add Task
@@ -30,7 +41,11 @@ export const AddTaskDialog = ({
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
-        <EventForm handleTask={handleTask} selectedDate={taskDate} />
+        <EventForm
+          handleTask={handleTask}
+          selectedDate={taskDate}
+          setOpenPopoverId={setOpenPopoverId}
+        />
       </DialogContent>
     </Dialog>
   );

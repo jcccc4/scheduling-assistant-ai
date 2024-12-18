@@ -21,6 +21,8 @@ interface HeaderProps {
   onPreviousWeek: () => void;
   onNextWeek: () => void;
   handleTask: (task: Task, operation?: string) => void;
+  openPopoverId: string | null;
+  setOpenPopoverId: (id: string | null) => void;
 }
 
 export const CalendarHeader = ({
@@ -29,6 +31,8 @@ export const CalendarHeader = ({
   onPreviousWeek,
   onNextWeek,
   handleTask,
+  openPopoverId,
+  setOpenPopoverId,
 }: HeaderProps) => {
   return (
     <header className="h-12 md:h-14 bg-white flex items-center justify-between text-lg md:text-xl px-2 md:px-4 shrink-0">
@@ -50,7 +54,11 @@ export const CalendarHeader = ({
         } ${today.getFullYear()}`}</h1>
       </div>
       <div className="flex items-center gap-4">
-        <AddTaskDialog handleTask={handleTask} />
+        <AddTaskDialog
+          handleTask={handleTask}
+          openPopoverId={openPopoverId}
+          setOpenPopoverId={setOpenPopoverId}
+        />
         <Select value={view} onValueChange={setView}>
           <SelectTrigger className="w-[140px] md:w-[180px] text-xs md:text-sm">
             <SelectValue placeholder="Select view" />

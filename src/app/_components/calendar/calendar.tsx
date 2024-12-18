@@ -38,10 +38,9 @@ type OptimisticAction = {
 export default function Scheduler() {
   const [view, setView] = useState("weekly");
   const [selectedDate, setSelectedDate] = useState(today);
-
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
-
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
   const [optimisticTasks, addOptimisticTask] = useOptimistic(
     tasks,
@@ -131,14 +130,15 @@ export default function Scheduler() {
             handleTask={handleTask}
             tasks={optimisticTasks}
             selectedDate={selectedDate}
-          
+            openPopoverId={openPopoverId}
+            setOpenPopoverId={setOpenPopoverId}
           />
         );
       case "monthly":
         return (
           <MonthlyView
             handleTask={handleTask}
-            tasks={optimisticTasks}
+            tasks={tasks}
             selectedDate={selectedDate}
           />
         );
@@ -152,6 +152,12 @@ export default function Scheduler() {
         const fetchedTasks = await getTasks();
 
         setTasks(fetchedTasks);
+        startTransition(() => {
+          addOptimisticTask({ 
+            task: fetchedTasks[0], // Dummy task just to trigger update
+            type: "edit" 
+          });
+        });
       } catch (error) {
         console.error("Failed to fetch tasks:", error);
       } finally {
@@ -170,7 +176,8 @@ export default function Scheduler() {
       handlePreviousWeek={handlePreviousWeek}
       handleNextWeek={handleNextWeek}
       handleTask={handleTask}
-      
+      openPopoverId={openPopoverId}
+      setOpenPopoverId={setOpenPopoverId}
     >
       {isLoading ? (
         <div className="flex items-center justify-center h-full">

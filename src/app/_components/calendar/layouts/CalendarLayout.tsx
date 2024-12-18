@@ -9,8 +9,9 @@ interface CalendarLayoutProps {
   handlePreviousWeek: () => void;
   handleNextWeek: () => void;
   handleTask: (task: Task) => void;
-
   children: React.ReactNode;
+  openPopoverId: string | null;
+  setOpenPopoverId: (id: string | null) => void;
 }
 
 export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
@@ -19,6 +20,8 @@ export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
   handlePreviousWeek,
   handleNextWeek,
   handleTask,
+  openPopoverId,
+  setOpenPopoverId,
   children,
 }) => {
   return (
@@ -29,6 +32,8 @@ export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
         onPreviousWeek={handlePreviousWeek}
         onNextWeek={handleNextWeek}
         handleTask={handleTask}
+        openPopoverId={openPopoverId}
+        setOpenPopoverId={setOpenPopoverId}
       />
       {children}
     </div>
