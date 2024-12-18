@@ -41,7 +41,6 @@ export default function Scheduler() {
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
-
   const [optimisticTasks, addOptimisticTask] = useOptimistic(
     tasks,
     (state: Task[], action: OptimisticAction) => {
@@ -59,6 +58,24 @@ export default function Scheduler() {
       }
     }
   );
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedTasks = await getTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+      } finally {
+        setTimeout(() => setIsLoading(false), 100);
+      }
+    };
+
+    // Call loadTasks immediately
+    loadTasks();
+  }, []);
+
   const handleTask = async (task: Task, operation = "add") => {
     try {
       // Optimistically update the UI
@@ -86,12 +103,17 @@ export default function Scheduler() {
 
       // Update the actual state only after successful API call
       setTasks((prevTasks) => {
-        if (operation === "delete") {
-          return prevTasks.filter((t) => t.id !== task.id);
-        } else if (operation === "edit") {
-          return prevTasks.map((t) => (t.id === task.id ? serverTask : t));
-        } else {
-          return [...prevTasks, serverTask];
+        switch (operation) {
+          case "add":
+            return [...prevTasks, task];
+          case "edit":
+            return prevTasks.map((t) =>
+              t.id === task.id ? { ...t, ...task } : t
+            );
+          case "delete":
+            return prevTasks.filter((t) => t.id !== task.id);
+          default:
+            return prevTasks;
         }
       });
     } catch (error) {
@@ -144,30 +166,6 @@ export default function Scheduler() {
         );
     }
   };
-
-  useEffect(() => {
-    const loadTasks = async () => {
-      setIsLoading(true);
-      try {
-        const fetchedTasks = await getTasks();
-
-        setTasks(fetchedTasks);
-        startTransition(() => {
-          addOptimisticTask({ 
-            task: fetchedTasks[0], // Dummy task just to trigger update
-            type: "edit" 
-          });
-        });
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      } finally {
-        setTimeout(() => setIsLoading(false), 100);
-      }
-    };
-
-    // Call loadTasks immediately
-    loadTasks();
-  }, []);
 
   return (
     <CalendarLayout
