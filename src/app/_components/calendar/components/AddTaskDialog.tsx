@@ -7,8 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 
 import { EventForm } from "../form/EventForm";
 
@@ -37,7 +36,7 @@ export const AddTaskDialog = ({
           Add Task
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-fit ">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>

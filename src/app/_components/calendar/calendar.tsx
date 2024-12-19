@@ -8,7 +8,7 @@ import React, {
 import { WeeklyView } from "./views/weekly";
 import { MonthlyView } from "./views/monthly";
 import { DailyView } from "./views/daily";
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 import { createTask, deleteTask, getTasks, updateTask } from "@/lib/api";
 import { CalendarLayout } from "./layouts/CalendarLayout";
 

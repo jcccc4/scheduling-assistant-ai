@@ -1,7 +1,7 @@
 "use client";
 
 import { DAYS, today } from "../calendar";
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 import { useState } from "react";
 import { formatTime } from "@/utilities/formatSimpleTime";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";

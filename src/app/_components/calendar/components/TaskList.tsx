@@ -1,12 +1,12 @@
 import React from 'react';
-import { Task } from '@/lib/types';
+import { Task } from "@prisma/client";
 import { formatTime } from '@/utilities/formatSimpleTime';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { TaskForm } from '../form/EventForm';
+import { EventForm } from '../form/EventForm';
 
 interface TaskListProps {
   tasks: Task[];
@@ -39,7 +39,7 @@ export const TaskList: React.FC<TaskListProps> = ({
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4">
-            <TaskForm
+            <EventForm
               handleTask={handleTask}
               title={task.title}
               id={task.id}

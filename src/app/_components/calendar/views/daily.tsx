@@ -1,6 +1,6 @@
 "use client";
 
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 import { TimeColumn } from "../components/TimeColumn";
 import { gridHeight, today } from "../calendar";
 import { useState, useEffect } from "react";

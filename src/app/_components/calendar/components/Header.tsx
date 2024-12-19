@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 // import { AddTaskDialog } from "./AddTaskDialog";
 import { MONTHS, today } from "../calendar";
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 import { AddTaskDialog } from "./AddTaskDialog";
 
 interface HeaderProps {

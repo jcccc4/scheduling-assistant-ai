@@ -1,5 +1,5 @@
 import React from 'react';
-import { Task } from '@/lib/types';
+import { Task } from "@prisma/client";
 import { WeeklyGridCell } from './WeeklyGridCell';
 
 interface HourCellsProps {

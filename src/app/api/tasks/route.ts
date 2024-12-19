@@ -1,14 +1,16 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { Task } from '@/lib/types';
-
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { Task } from "@prisma/client";
 // GET all tasks
 export async function GET() {
   try {
     const tasks = await prisma.task.findMany();
     return NextResponse.json(tasks);
   } catch (error) {
-    return NextResponse.json({ error: `Failed to fetch tasks: ${error}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `Failed to fetch tasks: ${error}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -23,11 +25,17 @@ export async function POST(request: Request) {
         description: task.description,
         startTime: task.startTime,
         endTime: task.endTime,
+        priority: task.priority,
+        duration: task.duration,
+        isAutoScheduled: task.isAutoScheduled,
       },
     });
     return NextResponse.json(newTask);
   } catch (error) {
-    return NextResponse.json({ error: `Failed to fetch tasks: ${error}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `Failed to fetch tasks: ${error}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -46,7 +54,10 @@ export async function PUT(request: Request) {
     });
     return NextResponse.json(updatedTask);
   } catch (error) {
-    return NextResponse.json({ error: `Failed to fetch tasks: ${error}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `Failed to fetch tasks: ${error}` },
+      { status: 500 }
+    );
   }
 }
 
@@ -57,8 +68,11 @@ export async function DELETE(request: Request) {
     await prisma.task.delete({
       where: { id },
     });
-    return NextResponse.json({ message: 'Task deleted successfully' });
+    return NextResponse.json({ message: "Task deleted successfully" });
   } catch (error) {
-    return NextResponse.json({ error: `Failed to fetch tasks: ${error}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `Failed to fetch tasks: ${error}` },
+      { status: 500 }
+    );
   }
 }

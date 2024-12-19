@@ -1,7 +1,6 @@
 import React from "react";
-import { Loader2 } from "lucide-react";
 import { CalendarHeader } from "../components/Header";
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 
 interface CalendarLayoutProps {
   view: string;

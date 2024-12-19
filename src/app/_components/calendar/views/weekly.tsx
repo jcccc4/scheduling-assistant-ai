@@ -1,11 +1,7 @@
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { DAYS, gridHeight, today } from "../calendar";
 import { TimeColumn } from "../components/TimeColumn";
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import CalendarEvent from "../events/events";
 import { EventForm } from "../form/EventForm";
@@ -229,7 +225,7 @@ export const WeeklyView = ({
                             )}
                           ></div>
                         </DialogTrigger>
-                        <DialogContent className="w-full p-4 z-[10000]">
+                        <DialogContent className="p-4 z-[10000]">
                           <VisuallyHidden.Root>
                             <DialogTitle>
                               Create Event for {taskDate.toLocaleDateString()}{" "}
