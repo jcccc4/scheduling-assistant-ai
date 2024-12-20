@@ -33,16 +33,20 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { useEffect } from "react";
+import { findAvailableTimeSlot } from "./AutoScheduler";
 
 // Adjust formSchema to match Task interface and handle id generation
 const formSchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
-  startTime: z.date({ required_error: "Start time is required." }),
-  endTime: z.date({ required_error: "End time is required." }),
+  startTime: z.date(),
+  endTime: z.date(),
   description: z.string().nullable(),
   priority: z.nativeEnum(Priority),
-  duration: z.number().min(0),
+  duration: z
+    .number()
+    .min(0.5, { message: "Duration must be at least 30 minutes" }),
   isAutoScheduled: z.boolean(),
   recurrence: z
     .object({
@@ -71,6 +75,7 @@ export const EventForm = ({
   setOpenPopoverId: (id: string | null) => void;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
+    mode: "onChange",
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: id || uuidv4(),
@@ -86,7 +91,7 @@ export const EventForm = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     handleTask(
       {
@@ -137,6 +142,28 @@ export const EventForm = ({
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="isAutoScheduled"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Auto Schedule</FormLabel>
+                <FormDescription>
+                  Let the system automatically schedule this task
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
         <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-4">
           <FormField
             control={form.control}
@@ -285,26 +312,6 @@ export const EventForm = ({
                 Optional details about your event
               </FormDescription>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="isAutoScheduled"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Auto Schedule</FormLabel>
-                <FormDescription>
-                  Let the system automatically schedule this task
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
             </FormItem>
           )}
         />
