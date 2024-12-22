@@ -90,9 +90,20 @@ export const EventForm = ({
       isAutoScheduled: false,
     },
   });
+  const isAutoScheduled = form.watch("isAutoScheduled");
+
+  // Add this function to handle auto-scheduling
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    if (values.isAutoScheduled) {
+      const { startTime, endTime } = await findAvailableTimeSlot(
+        values.startTime,
+        values.duration
+      );
+      values.startTime = startTime;
+      values.endTime = endTime;
+    }
+console.log(values)
     handleTask(
       {
         ...values,
@@ -151,7 +162,7 @@ export const EventForm = ({
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Auto Schedule</FormLabel>
                 <FormDescription>
-                  Let the system automatically schedule this task
+                  Toggle between manual dates and duration-based scheduling
                 </FormDescription>
               </div>
               <FormControl>
@@ -164,206 +175,134 @@ export const EventForm = ({
           )}
         />
 
-        <div className="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-4">
+        {/* Toggle between date fields and duration */}
+        {isAutoScheduled ? (
+          // Duration field when auto-schedule is ON
           <FormField
             control={form.control}
-            name="startTime"
+            name="duration"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Start Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className="w-[240px] pl-3 text-left font-normal"
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a start date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => {
-                        const compareDate = new Date(date);
-                        const today = new Date();
-                        today.setHours(0);
-                        compareDate.setHours(0);
-                        return compareDate < today;
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Select
-                  value={field.value.getHours().toString()}
-                  onValueChange={(e) => {
-                    const timeNumber = Number(e);
-                    const newDate = new Date(field.value);
-                    newDate.setHours(timeNumber);
-                    field.onChange(newDate);
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a start time" />
-                    <Clock className="ml-auto h-4 w-4 opacity-50" />
-                  </SelectTrigger>
-
-                  <SelectContent className="z-50">
-                    {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                      <SelectItem key={hour} value={String(hour)}>
-                        {`${hour.toString().padStart(2, "0")}:00`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <FormItem>
+                <FormLabel>Duration (hours)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.5"
+                    min="0.5"
+                    placeholder="Enter duration in hours"
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Specify how long the event will last (minimum 0.5 hours)
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="endTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>End Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={"w-[240px] pl-3 text-left font-normal"}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick an end date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => {
-                        const compareDate = new Date(date);
-                        const today = new Date();
-                        today.setHours(0);
-                        compareDate.setHours(0);
-                        return compareDate < today;
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Select
-                  value={field.value.getHours().toString()}
-                  onValueChange={(e) => {
-                    const timeNumber = Number(e);
-                    const newDate = new Date(field.value);
-                    newDate.setHours(timeNumber);
-                    field.onChange(newDate);
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a start time" />
-                    <Clock className="ml-auto h-4 w-4 opacity-50" />
-                  </SelectTrigger>
+        ) : (
+          // Date/time fields when auto-schedule is OFF
+          <div className="flex flex-col sm:flex-row gap-4">
+            <FormField
+              control={form.control}
+              name="startTime"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Start Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className="w-[240px] pl-3 text-left font-normal"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a start date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                  <SelectContent className="z-50">
-                    {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                      <SelectItem key={hour} value={String(hour)}>
-                        {`${hour.toString().padStart(2, "0")}:00`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+            <FormField
+              control={form.control}
+              name="endTime"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>End Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className="w-[240px] pl-3 text-left font-normal"
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick an end date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
         <FormField
           control={form.control}
-          name="description"
+          name="priority"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Add any additional details..."
-                  className="resize-none"
-                  {...field}
-                  value={field.value || ""}
-                />
-              </FormControl>
-              <FormDescription>
-                Optional details about your event
-              </FormDescription>
+              <FormLabel>Priority</FormLabel>
+              <Select
+                onValueChange={(value: Priority) => field.onChange(value)}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value={Priority.LOW}>Low</SelectItem>
+                  <SelectItem value={Priority.MEDIUM}>Medium</SelectItem>
+                  <SelectItem value={Priority.HIGH}>High</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Duration (hours)</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    min={0}
-                    step={0.5}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormDescription>How long will this task take?</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="priority"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Priority</FormLabel>
-                <Select
-                  onValueChange={(value: Priority) => field.onChange(value)}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select priority" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value={Priority.LOW}>Low</SelectItem>
-                    <SelectItem value={Priority.MEDIUM}>Medium</SelectItem>
-                    <SelectItem value={Priority.HIGH}>High</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
         <div className="flex justify-end gap-2">
           {operation === "edit" && (
             <Button type="button" variant="destructive" onClick={onDelete}>

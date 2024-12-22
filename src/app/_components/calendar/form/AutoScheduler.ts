@@ -89,8 +89,9 @@ export async function findAvailableTimeSlot(
     (a, b) => (a.startTime?.getTime() || 0) - (b.startTime?.getTime() || 0)
   );
 
-  const today = new Date(taskDate);
-  let currentDay = new Date(today);
+  //Add if
+  let currentDay = new Date(taskDate);
+
   currentDay.setHours(workingHours.start, 0, 0, 0); // Start working hours at 9 AM
   const workingHoursPerDay = workingHours.end - workingHours.start;
 
@@ -108,14 +109,16 @@ export async function findAvailableTimeSlot(
   }
 
   if (newTaskDuration <= 0) {
-    throw new Error('Task duration must be positive');
+    throw new Error("Task duration must be positive");
   }
-  
+
   if (taskDate < new Date()) {
-    throw new Error('Task date cannot be in the past');
+    throw new Error("Task date cannot be in the past");
   }
   if (newTaskDuration > workingHoursPerDay) {
-    throw new Error(`Task duration cannot exceed working hours (${workingHoursPerDay} hours)`);
+    throw new Error(
+      `Task duration cannot exceed working hours (${workingHoursPerDay} hours)`
+    );
   }
   const timeSlots = taskArray(tasks, currentDay, workingHours);
   const requiredSlots = Math.ceil(newTaskDuration);
@@ -125,7 +128,7 @@ export async function findAvailableTimeSlot(
     if (!timeSlots[i]) {
       consecutiveFreeSlots++;
       if (consecutiveFreeSlots >= requiredSlots) {
-        startHour = i - requiredSlots + workingHours.start;
+        startHour = i - requiredSlots + workingHours.start + 1;
         break;
       }
     } else {
