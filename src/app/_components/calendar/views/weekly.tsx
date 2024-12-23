@@ -3,7 +3,7 @@ import { DAYS, gridHeight, today } from "../calendar";
 import { TimeColumn } from "../components/TimeColumn";
 import { Task } from "@prisma/client";
 import { cn } from "@/lib/utils";
-import CalendarEvent from "../events/events";
+
 import { EventForm } from "../form/EventForm";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import CalendarEvent from "../events/events";
 
 const isToday = (date: Date) => {
   return (

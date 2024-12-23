@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useEffect } from "react";
 import { findAvailableTimeSlot } from "./AutoScheduler";
+import { formatSimpleTime } from "@/utilities/formatSimpleTime";
 
 // Adjust formSchema to match Task interface and handle id generation
 const formSchema = z.object({
@@ -103,7 +104,7 @@ export const EventForm = ({
       values.startTime = startTime;
       values.endTime = endTime;
     }
-console.log(values)
+    console.log(values);
     handleTask(
       {
         ...values,
@@ -209,68 +210,138 @@ console.log(values)
               name="startTime"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Start Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className="w-[240px] pl-3 text-left font-normal"
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a start date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <FormLabel>Start Date & Time</FormLabel>
+                  <div className="flex gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className="w-[240px] pl-3 text-left font-normal"
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a start date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    <Select
+                      onValueChange={(time) => {
+                        const [hours, minutes] = time.split(":").map(Number);
+                        const newDate = new Date(field.value);
+                        newDate.setHours(hours, minutes);
+                        field.onChange(newDate);
+                      }}
+                      defaultValue={`${field.value
+                        .getHours()
+                        .toString()
+                        .padStart(2, "0")}:${field.value
+                        .getMinutes()
+                        .toString()
+                        .padStart(2, "0")}`}
+                    >
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Select time" />
+                      </SelectTrigger>
+                      <SelectContent >
+                        {Array.from({ length: 24 }).map((_, i) => {
+                          const hours = Math.floor(i);
+
+                          const timeString = formatSimpleTime(hours, 0);
+                          return (
+                            <SelectItem key={timeString} value={timeString}>
+                              {timeString}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="endTime"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>End Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className="w-[240px] pl-3 text-left font-normal"
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick an end date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <FormLabel>End Date & Time</FormLabel>
+                  <div className="flex gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className="w-[240px] pl-3 text-left font-normal"
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick an end date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    <Select
+                      onValueChange={(time) => {
+                        const [hours, minutes] = time.split(":").map(Number);
+                        const newDate = new Date(field.value);
+                        newDate.setHours(hours, minutes);
+                        field.onChange(newDate);
+                      }}
+                      defaultValue={`${field.value
+                        .getHours()
+                        .toString()
+                        .padStart(2, "0")}:${field.value
+                        .getMinutes()
+                        .toString()
+                        .padStart(2, "0")}`}
+                    >
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Select time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({ length: 24 }).map((_, i) => {
+                          const hours = Math.floor(i);
+
+                          const time = `${hours
+                            .toString()
+                            .padStart(2, "0")}:${0}`;
+                          const timeString = formatSimpleTime(hours, 0);
+                          return (
+                            <SelectItem key={timeString} value={time}>
+                              {timeString}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
