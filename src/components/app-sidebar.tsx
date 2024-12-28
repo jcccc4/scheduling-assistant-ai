@@ -40,7 +40,7 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export async function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>

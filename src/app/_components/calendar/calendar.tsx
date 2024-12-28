@@ -35,7 +35,7 @@ type OptimisticAction = {
   task: Task;
   type: "add" | "edit" | "delete";
 };
-export default function Scheduler() {
+export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
   const [view, setView] = useState("weekly");
   const [selectedDate, setSelectedDate] = useState(today);
   const [isLoading, setIsLoading] = useState(false);
@@ -78,14 +78,6 @@ export default function Scheduler() {
 
   const handleTask = async (task: Task, operation = "add") => {
     try {
-      // Optimistically update the UI
-      startTransition(() => {
-        addOptimisticTask({
-          task,
-          type: operation as "add" | "edit" | "delete",
-        });
-      });
-
       // Then perform the API call
       let serverTask: Task;
       switch (operation) {
@@ -100,7 +92,13 @@ export default function Scheduler() {
           serverTask = task; // For delete, we'll use the original task
           break;
       }
-
+      // Optimistically update the UI
+      startTransition(() => {
+        addOptimisticTask({
+          task,
+          type: operation as "add" | "edit" | "delete",
+        });
+      });
       // Update the actual state only after successful API call
       setTasks((prevTasks) => {
         switch (operation) {
@@ -169,6 +167,7 @@ export default function Scheduler() {
 
   return (
     <CalendarLayout
+    isSignedIn={isSignedIn}
       view={view}
       setView={setView}
       handlePreviousWeek={handlePreviousWeek}

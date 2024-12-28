@@ -3,6 +3,7 @@ import { CalendarHeader } from "../components/Header";
 import { Task } from "@prisma/client";
 
 interface CalendarLayoutProps {
+  isSignedIn: boolean;
   view: string;
   setView: (view: string) => void;
   handlePreviousWeek: () => void;
@@ -14,6 +15,7 @@ interface CalendarLayoutProps {
 }
 
 export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
+  isSignedIn,
   view,
   setView,
   handlePreviousWeek,
@@ -26,6 +28,7 @@ export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
   return (
     <div className="flex flex-col h-screen">
       <CalendarHeader
+      isSignedIn={isSignedIn}
         view={view}
         setView={setView}
         onPreviousWeek={handlePreviousWeek}

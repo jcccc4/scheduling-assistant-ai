@@ -14,6 +14,7 @@ import {
 import { MONTHS, today } from "../calendar";
 import { Task } from "@prisma/client";
 import { AddTaskDialog } from "./AddTaskDialog";
+import GoogleButton from "@/components/authentication/google-button";
 
 interface HeaderProps {
   view: string;
@@ -23,6 +24,7 @@ interface HeaderProps {
   handleTask: (task: Task, operation?: string) => void;
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
+  isSignedIn: boolean;
 }
 
 export const CalendarHeader = ({
@@ -33,6 +35,7 @@ export const CalendarHeader = ({
   handleTask,
   openPopoverId,
   setOpenPopoverId,
+  isSignedIn,
 }: HeaderProps) => {
   return (
     <header className="h-12 md:h-14 bg-white flex items-center justify-between text-lg md:text-xl px-2 md:px-4 shrink-0">
@@ -54,6 +57,7 @@ export const CalendarHeader = ({
         } ${today.getFullYear()}`}</h1>
       </div>
       <div className="flex items-center gap-4">
+        <GoogleButton isSignedIn={isSignedIn} />
         <AddTaskDialog
           handleTask={handleTask}
           openPopoverId={openPopoverId}

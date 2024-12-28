@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { EventForm } from "../form/EventForm";
-import { Task } from "@/lib/types";
+import { Task } from "@prisma/client";
 
 interface CalendarEventProps {
   eventData: Task;
