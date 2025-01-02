@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 import Calendar from "@/app/_components/calendar/calendar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { authOptions } from "@/auth";
 
 export default async function WebApp() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const isSignedIn = !!session;
 
   if (!isSignedIn) {

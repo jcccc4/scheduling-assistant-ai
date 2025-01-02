@@ -19,7 +19,6 @@ enum Frequency {
   WEEKLY
   MONTHLY
 }
-
 model Account {
   id                 String  @id @default(cuid())
   userId             String  @map("user_id")
@@ -72,28 +71,24 @@ model VerificationToken {
 }
 
 model Task {
-  id          String   @id @default(uuid())
-  title       String
-  startTime   DateTime
-  endTime     DateTime
-  description String?
-
+  id              String      @id @default(uuid())
+  title           String
+  startTime       DateTime
+  endTime         DateTime
+  description     String?
   priority        Priority
-  duration        Int // in minutes
+  duration        Int
   isAutoScheduled Boolean     @default(false)
   recurrence      Recurrence?
 
-  // createdAt DateTime @default(now())
-  // updatedAt DateTime @updatedAt
 }
 
 model Recurrence {
   id         String    @id @default(uuid())
   frequency  Frequency
   endDate    DateTime?
-  daysOfWeek Int[] // Prisma supports array of integers
+  daysOfWeek Int[]
 
-  // Relation fields
-  eventForm   Task   @relation(fields: [eventFormId], references: [id])
-  eventFormId String @unique // One-to-one relation
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId String @unique
 }

@@ -6,9 +6,12 @@ import { CTASection } from "@/app/_components/landing-page/cta-section";
 import { redirect } from "next/navigation";
 import { Navbar } from "@/app/_components/landing-page/navbar";
 import { PricingSection } from "./_components/landing-page/pricing-section";
+import { authOptions } from "@/auth";
+
+
 
 export default async function Home() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const isSignedIn = !!session;
 
   if (isSignedIn) {
