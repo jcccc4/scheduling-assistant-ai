@@ -90,7 +90,7 @@ export async function findAvailableTimeSlot(
   );
 
   //Add if
-  let currentDay = new Date(taskDate);
+  const currentDay = new Date(taskDate);
 
   currentDay.setHours(workingHours.start, 0, 0, 0); // Start working hours at 9 AM
   const workingHoursPerDay = workingHours.end - workingHours.start;

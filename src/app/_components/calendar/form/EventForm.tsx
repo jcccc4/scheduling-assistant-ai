@@ -23,7 +23,7 @@ import {
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { addHours, format } from "date-fns";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -31,9 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { useEffect } from "react";
 import { findAvailableTimeSlot } from "./AutoScheduler";
 import { formatSimpleTime } from "@/utilities/formatSimpleTime";
 

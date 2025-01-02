@@ -1,4 +1,3 @@
-
 import { DAYS, gridHeight, today } from "../calendar";
 import { TimeColumn } from "../components/TimeColumn";
 import { Task } from "@prisma/client";
@@ -59,7 +58,6 @@ export const WeeklyView = ({
   tasks,
   handleTask,
   selectedDate,
-
   openPopoverId,
   setOpenPopoverId,
 }: {
@@ -88,7 +86,7 @@ export const WeeklyView = ({
     if (timeBarRef.current) {
       timeBarRef.current.scrollTop = 400;
     }
-  }, [timeBarRef.current]);
+  }, []);
 
   return (
     <div
@@ -151,10 +149,9 @@ export const WeeklyView = ({
                           new Date(b.startTime).getTime();
                         return durationB - durationA; // descending order (longest to shortest)
                       });
-                      console.log(hourTasks)
                     return (
                       <div
-                        key={startTime.getTime()}
+                        key={`${startTime.getTime()}-${uniqueTask.id}`}
                         style={{
                           top: `${
                             startTime.getHours() * gridHeight +
@@ -164,9 +161,11 @@ export const WeeklyView = ({
                         className="w-11/12 absolute left-0 animate-fade-in transition-all duration-300 z-10"
                       >
                         {hourTasks.map((task, index) => {
-                          const taskKey =
-                            task.id || `${task.startTime.getTime()}-${index}`;
-                     
+                          // Create a more unique key combining multiple values
+                          const taskKey = `${
+                            task.id
+                          }-${task.startTime.getTime()}-${index}`;
+
                           return task.startTime.getHours() ===
                             startTime.getHours() &&
                             task.startTime.getDate() === startTime.getDate() &&

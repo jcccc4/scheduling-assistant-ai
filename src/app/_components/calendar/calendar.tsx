@@ -79,17 +79,17 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
   const handleTask = async (task: Task, operation = "add") => {
     try {
       // Then perform the API call
-      let serverTask: Task;
+
       switch (operation) {
         case "add":
-          serverTask = await createTask(task);
+          await createTask(task);
           break;
         case "edit":
-          serverTask = await updateTask(task);
+          await updateTask(task);
           break;
         case "delete":
           await deleteTask(task.id);
-          serverTask = task; // For delete, we'll use the original task
+
           break;
       }
       // Optimistically update the UI
@@ -167,7 +167,7 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
 
   return (
     <CalendarLayout
-    isSignedIn={isSignedIn}
+      isSignedIn={isSignedIn}
       view={view}
       setView={setView}
       handlePreviousWeek={handlePreviousWeek}
