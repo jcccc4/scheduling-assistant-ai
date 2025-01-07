@@ -10,11 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { AddTaskDialog } from "./AddTaskDialog";
-import { MONTHS, today } from "../calendar";
+import { MONTHS } from "../calendar";
 import { Task } from "@prisma/client";
 import { AddTaskDialog } from "./AddTaskDialog";
 import GoogleButton from "@/components/authentication/google-button";
+import { Session } from "next-auth";
 
 interface HeaderProps {
   view: string;
@@ -25,6 +25,8 @@ interface HeaderProps {
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
   isSignedIn: boolean;
+  setSelectedDate: (date: Date) => void;
+  session: Session;
 }
 
 export const CalendarHeader = ({
@@ -36,13 +38,23 @@ export const CalendarHeader = ({
   openPopoverId,
   setOpenPopoverId,
   isSignedIn,
+  setSelectedDate,
+  session
 }: HeaderProps) => {
+  const handleTodayClick = () => {
+    setSelectedDate(new Date());
+  };
   return (
     <header className="h-12 md:h-14 bg-white flex items-center justify-between text-lg md:text-xl px-2 md:px-4 shrink-0">
       <div className="flex items-center gap-2 md:gap-4">
         <div className="flex gap-1 md:gap-2">
           <SidebarTrigger />
-          <Button variant="outline" size="sm" className="text-xs md:text-sm">
+          <Button
+            onClick={handleTodayClick}
+            variant="outline"
+            size="sm"
+            className="text-xs md:text-sm"
+          >
             Today
           </Button>
           <Button variant="ghost" size="icon" onClick={onPreviousWeek}>
@@ -53,8 +65,8 @@ export const CalendarHeader = ({
           </Button>
         </div>
         <h1 className="font-semibold">{`${
-          MONTHS[today.getMonth()]
-        } ${today.getFullYear()}`}</h1>
+          MONTHS[new Date().getMonth()]
+        } ${new Date().getFullYear()}`}</h1>
       </div>
       <div className="flex items-center gap-4">
         <GoogleButton isSignedIn={isSignedIn} />
@@ -62,6 +74,7 @@ export const CalendarHeader = ({
           handleTask={handleTask}
           openPopoverId={openPopoverId}
           setOpenPopoverId={setOpenPopoverId}
+          session={session}
         />
         <Select value={view} onValueChange={setView}>
           <SelectTrigger className="w-[140px] md:w-[180px] text-xs md:text-sm">

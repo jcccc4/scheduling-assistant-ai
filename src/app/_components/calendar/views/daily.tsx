@@ -2,9 +2,13 @@
 
 import { Task } from "@prisma/client";
 import { TimeColumn } from "../components/TimeColumn";
-import { gridHeight, today } from "../calendar";
+import { gridHeight } from "../calendar";
 import { useState, useEffect } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { EventForm } from "../form/EventForm";
 import CalendarEvent from "../events/events";
@@ -16,7 +20,12 @@ interface DailyViewProps {
   selectedDate: Date;
 }
 
-export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) => {
+export const DailyView = ({
+  tasks,
+  handleTask,
+  selectedDate,
+}: DailyViewProps) => {
+  const today = new Date();
   selectedDate.setHours(0, 0, 0, 0);
   const [currentTimeHeight, setCurrentTimeHeight] = useState(0);
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
@@ -26,7 +35,9 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      setCurrentTimeHeight(hours * gridHeight + (minutes / 60) * gridHeight + hours);
+      setCurrentTimeHeight(
+        hours * gridHeight + (minutes / 60) * gridHeight + hours
+      );
     };
 
     updateTimeBar();
@@ -45,12 +56,13 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
 
   const uniqueStartTimeTasks = dailyTasks.filter(
     (task, index, self) =>
-      index === self.findIndex((t) => t.startTime.getTime() === task.startTime.getTime())
+      index ===
+      self.findIndex((t) => t.startTime.getTime() === task.startTime.getTime())
   );
 
   return (
     <div data-testid="daily-view" className="relative h-fit">
-      <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto">
+      <div className="grid grid-cols-[40px_1fr] md:grid-cols-[60px_1fr] gap-[1px] min-h-0 grow shrink overflow-auto bg-gray-50">
         <TimeColumn gridHeight={gridHeight} />
         <div className="relative w-full">
           <div className="relative">
@@ -59,22 +71,26 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
               const hourTasks = dailyTasks.filter((task) => {
                 const taskStart = new Date(task.startTime);
                 const taskEnd = task.endTime ? new Date(task.endTime) : null;
-                return taskEnd ? 
-                  startTime >= taskStart && startTime < taskEnd :
-                  startTime >= taskStart;
+                return taskEnd
+                  ? startTime >= taskStart && startTime < taskEnd
+                  : startTime >= taskStart;
               });
 
               return (
                 <div
                   key={startTime.getTime()}
                   style={{
-                    top: `${startTime.getHours() * gridHeight + startTime.getHours()}px`,
+                    top: `${
+                      startTime.getHours() * gridHeight + startTime.getHours()
+                    }px`,
                   }}
                   className="w-11/12 absolute left-0 animate-fade-in transition-all duration-300 z-10"
                 >
                   {hourTasks.map((task, index) => {
-                    const taskKey = task.id || `${task.startTime.getTime()}-${index}`;
-                    return task.startTime.getHours() === startTime.getHours() ? (
+                    const taskKey =
+                      task.id || `${task.startTime.getTime()}-${index}`;
+                    return task.startTime.getHours() ===
+                      startTime.getHours() ? (
                       <CalendarEvent
                         key={taskKey}
                         eventData={task}
@@ -100,7 +116,7 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
                   <div className="h-2 w-2 rounded-full absolute left-[-4px] top-[-3px] bg-orange-500 z-10" />
                   <div className="w-full h-[2px] bg-orange-500 z-10" />
                 </div>
-            )}
+              )}
 
             {Array.from({ length: 24 }).map((_, hour) => {
               const taskDate = new Date(selectedDate);
@@ -119,15 +135,21 @@ export const DailyView = ({ tasks, handleTask, selectedDate }: DailyViewProps) =
                         "relative hover:bg-slate-100 h-[40px] md:h-[50px] border-b border-gray-200 cursor-pointer"
                       )}
                       onClick={(e) => e.stopPropagation()}
-               
                     />
                   </PopoverTrigger>
-                  <PopoverContent className="w-[280px] md:w-80 p-2 md:p-4" side={isMobile ? "bottom" : "left"}>
-                    <EventForm
-                      handleTask={handleTask} 
-                      selectedDate={taskDate}
-                      setOpenPopoverId={setOpenPopoverId}
-                    />
+                  <PopoverContent
+                    className="w-[90vw] md:w-80 p-2 md:p-4"
+                    side={isMobile ? "bottom" : "left"}
+                    align={isMobile ? "center" : "start"}
+                    sideOffset={isMobile ? 5 : 10}
+                  >
+                    <div className="max-h-[80vh] overflow-auto">
+                      <EventForm
+                        handleTask={handleTask}
+                        selectedDate={taskDate}
+                        setOpenPopoverId={setOpenPopoverId}
+                      />
+                    </div>
                   </PopoverContent>
                 </Popover>
               );

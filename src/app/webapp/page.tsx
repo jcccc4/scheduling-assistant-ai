@@ -8,7 +8,7 @@ import { authOptions } from "@/auth";
 export default async function WebApp() {
   const session = await getServerSession(authOptions);
   const isSignedIn = !!session;
-
+  console.log("isSignedIn ", session);
   if (!isSignedIn) {
     redirect("/");
   }
@@ -17,7 +17,7 @@ export default async function WebApp() {
     <SidebarProvider>
       <AppSidebar />
       <main className="h-screen w-full flex flex-col">
-        <Calendar isSignedIn={isSignedIn} />
+        <Calendar isSignedIn={isSignedIn} session={session} />
       </main>
     </SidebarProvider>
   );

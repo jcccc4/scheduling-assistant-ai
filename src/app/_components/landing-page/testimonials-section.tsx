@@ -2,19 +2,19 @@
 const testimonials = [
   {
     content: "This calendar app has completely transformed how I manage my time. The smart scheduling features are a game-changer.",
-    author: "Sarah Johnson",
+    author: "Justfer Himbing",
     role: "Product Manager",
     avatar: "/avatars/avatar-1.png"
   },
   {
     content: "The team coordination features have made it so much easier to schedule meetings across different time zones.",
-    author: "Michael Chen",
+    author: "Daxz Jude Gonzalez",
     role: "Engineering Lead",
     avatar: "/avatars/avatar-2.png"
   },
   {
     content: "I love how the AI learns my preferences. It's like having a personal assistant that actually knows what I want.",
-    author: "Emily Rodriguez",
+    author: "Daryll ",
     role: "Marketing Director",
     avatar: "/avatars/avatar-3.png"
   }

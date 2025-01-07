@@ -8,10 +8,10 @@ import React, {
 import { WeeklyView } from "./views/weekly";
 import { MonthlyView } from "./views/monthly";
 import { DailyView } from "./views/daily";
-import { Task } from "@prisma/client";
+import {  Task } from "@prisma/client";
 import { createTask, deleteTask, getTasks, updateTask } from "@/lib/api";
 import { CalendarLayout } from "./layouts/CalendarLayout";
-
+import { Session } from "next-auth";
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export const MONTHS = [
   "January",
@@ -28,16 +28,21 @@ export const MONTHS = [
   "December",
 ];
 
-export const today = new Date();
 export const gridHeight = 50;
 
 type OptimisticAction = {
   task: Task;
   type: "add" | "edit" | "delete";
 };
-export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
+export default function Scheduler({
+  isSignedIn,
+  session,
+}: {
+  isSignedIn: boolean;
+  session: Session
+}) {
   const [view, setView] = useState("weekly");
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
@@ -71,15 +76,12 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
         setTimeout(() => setIsLoading(false), 100);
       }
     };
-
-    // Call loadTasks immediately
     loadTasks();
   }, []);
 
   const handleTask = async (task: Task, operation = "add") => {
     try {
       // Then perform the API call
-
       switch (operation) {
         case "add":
           await createTask(task);
@@ -89,7 +91,6 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
           break;
         case "delete":
           await deleteTask(task.id);
-
           break;
       }
       // Optimistically update the UI
@@ -152,6 +153,7 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
             selectedDate={selectedDate}
             openPopoverId={openPopoverId}
             setOpenPopoverId={setOpenPopoverId}
+            session={session}
           />
         );
       case "monthly":
@@ -160,6 +162,7 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
             handleTask={handleTask}
             tasks={tasks}
             selectedDate={selectedDate}
+            
           />
         );
     }
@@ -175,6 +178,8 @@ export default function Scheduler({ isSignedIn }: { isSignedIn: boolean }) {
       handleTask={handleTask}
       openPopoverId={openPopoverId}
       setOpenPopoverId={setOpenPopoverId}
+      setSelectedDate={setSelectedDate}
+      session={session}
     >
       {isLoading ? (
         <div className="flex items-center justify-center h-full">

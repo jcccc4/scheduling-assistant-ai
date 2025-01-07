@@ -1,6 +1,6 @@
 "use client";
 
-import { DAYS, today } from "../calendar";
+import { DAYS } from "../calendar";
 import { Task } from "@prisma/client";
 import { useState } from "react";
 import { formatTime } from "@/utilities/formatSimpleTime";
@@ -19,20 +19,24 @@ interface MonthlyViewProps {
   selectedDate: Date;
 }
 
-export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProps) => {
+export const MonthlyView = ({
+  tasks,
+  handleTask,
+  selectedDate,
+}: MonthlyViewProps) => {
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
-
+  const today = new Date();
   const daysInMonth = () => {
     const year = selectedDate.getFullYear();
     const month = selectedDate.getMonth();
     const date = new Date(year, month, 1);
     const days = [];
-    
+
     // Add empty spaces for days before the first of the month
     for (let i = 0; i < date.getDay(); i++) {
       days.push({ date: null, tasks: [] });
     }
-    
+
     // Add all days in the month
     while (date.getMonth() === month) {
       const dayTasks = tasks.filter((task) => {
@@ -43,10 +47,12 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
           taskDate.getDate() === date.getDate()
         );
       });
-      
+
       days.push({
         date: new Date(date),
-        tasks: dayTasks.sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+        tasks: dayTasks.sort(
+          (a, b) => a.startTime.getTime() - b.startTime.getTime()
+        ),
       });
       date.setDate(date.getDate() + 1);
     }
@@ -79,7 +85,7 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
           <div
             key={i}
             className={cn(
-              "bg-white min-h-[100px] md:min-h-[150px] flex flex-col p-1 md:p-2 relative",
+              "bg-white min-h-[100px] md:min-h-[150px] flex flex-col p-1 md:p-2 relative transition-all duration-200 hover:bg-gray-50",
               isToday(date) && "ring-2 ring-blue-500"
             )}
           >
@@ -96,17 +102,17 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                 </span>
               )}
             </div>
-            <div className="flex-1 overflow-hidden mt-1">
+            <div className="flex-1 overflow-hidden mt-1 space-y-1">
               {tasks.slice(0, 3).map((task) => (
                 <Popover
                   key={task.id}
                   open={openPopoverId === task.id}
-                  onOpenChange={(isOpen) => setOpenPopoverId(isOpen ? task.id : null)}
+                  onOpenChange={(isOpen) =>
+                    setOpenPopoverId(isOpen ? task.id : null)
+                  }
                 >
                   <PopoverTrigger asChild>
-                    <div
-                      className="text-[10px] md:text-xs mt-1 p-1 bg-blue-50 text-blue-800 rounded truncate hover:bg-blue-100 cursor-pointer"
-                    >
+                    <div className="text-[10px] md:text-xs mt-1 p-1 bg-blue-50 text-blue-800 rounded truncate hover:bg-blue-100 cursor-pointer">
                       <div className="font-semibold truncate">{task.title}</div>
                       <div className="text-xs opacity-75">
                         {formatTime(task.startTime)}
@@ -114,16 +120,23 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                       </div>
                     </div>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 p-4">
-                    <EventForm
-                      handleTask={handleTask}
-                      title={task.title}
-                      id={task.id}
-                      selectedDate={task.startTime}
-                      endDate={task.endTime}
-                      operation="edit"
-                      setOpenPopoverId={setOpenPopoverId}
-                    />
+                  <PopoverContent
+                    className="w-[90vw] md:w-80 p-2 md:p-4"
+                    side="bottom"
+                    align="center"
+                    sideOffset={5}
+                  >
+                    <div className="max-h-[80vh] overflow-auto">
+                      <EventForm
+                        handleTask={handleTask}
+                        title={task.title}
+                        id={task.id}
+                        selectedDate={task.startTime}
+                        endDate={task.endTime}
+                        operation="edit"
+                        setOpenPopoverId={setOpenPopoverId}
+                      />
+                    </div>
                   </PopoverContent>
                 </Popover>
               ))}
@@ -134,20 +147,25 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                       +{tasks.length - 3} more
                     </div>
                   </DialogTrigger>
-                  <DialogContent className="max-h-[80vh] overflow-auto w-[90vw] md:w-auto">
-                    <div className="space-y-2">
+                  <DialogContent className="max-h-[80vh] overflow-auto w-[90vw] md:w-[450px]">
+                    <div className="space-y-2 p-4">
                       {tasks.map((task) => (
                         <Popover
                           key={task.id}
                           open={openPopoverId === task.id}
-                          onOpenChange={(isOpen) => setOpenPopoverId(isOpen ? task.id : null)}
+                          onOpenChange={(isOpen) =>
+                            setOpenPopoverId(isOpen ? task.id : null)
+                          }
                         >
                           <PopoverTrigger asChild>
                             <div className="p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                              <div className="font-medium text-sm md:text-base">{task.title}</div>
+                              <div className="font-medium text-sm md:text-base">
+                                {task.title}
+                              </div>
                               <div className="text-sm text-gray-500">
                                 {formatTime(task.startTime)}
-                                {task.endTime && ` - ${formatTime(task.endTime)}`}
+                                {task.endTime &&
+                                  ` - ${formatTime(task.endTime)}`}
                               </div>
                             </div>
                           </PopoverTrigger>
@@ -160,6 +178,7 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                               endDate={task.endTime}
                               operation="edit"
                               setOpenPopoverId={setOpenPopoverId}
+                            
                             />
                           </PopoverContent>
                         </Popover>
@@ -176,12 +195,19 @@ export const MonthlyView = ({ tasks, handleTask, selectedDate }: MonthlyViewProp
                   onClick={(e) => e.stopPropagation()}
                 />
               </DialogTrigger>
-              <DialogContent className="w-[90vw] md:w-96">
-                <EventForm
-                  handleTask={handleTask}
-                  selectedDate={date || selectedDate}
-                  setOpenPopoverId={setOpenPopoverId}
-                />
+              <DialogContent className="w-[90vw] md:w-96 max-h-[90vh] overflow-auto">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">
+                    Add Task -{" "}
+                    {date?.toLocaleDateString() ||
+                      selectedDate.toLocaleDateString()}
+                  </h3>
+                  <EventForm
+                    handleTask={handleTask}
+                    selectedDate={date || selectedDate}
+                    setOpenPopoverId={setOpenPopoverId}
+                  />
+                </div>
               </DialogContent>
             </Dialog>
           </div>

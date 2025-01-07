@@ -15,7 +15,6 @@ export const MONTHS = [
   "December",
 ];
 
-export const today = new Date();
 export const gridHeight = 50;
 
 export const VIEW_TYPES = {

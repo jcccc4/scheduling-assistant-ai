@@ -1,4 +1,4 @@
-import { DAYS, gridHeight, today } from "../calendar";
+import { DAYS, gridHeight } from "../calendar";
 import { TimeColumn } from "../components/TimeColumn";
 import { Task } from "@prisma/client";
 import { cn } from "@/lib/utils";
@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import CalendarEvent from "../events/events";
+import { Session } from "next-auth";
 
 const isToday = (date: Date) => {
+  const today = new Date();
   return (
     today.getFullYear() === date.getFullYear() &&
     today.getMonth() === date.getMonth() &&
@@ -60,13 +62,16 @@ export const WeeklyView = ({
   selectedDate,
   openPopoverId,
   setOpenPopoverId,
+  session,
 }: {
   tasks: Task[];
   handleTask: (task: Task) => void;
   selectedDate: Date;
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
+  session: Session;
 }) => {
+  const today = new Date();
   selectedDate.setHours(0, 0, 0, 0);
   const [currentTimeHeight, setCurrentTimeHeight] = useState(
     findTimeBarHeight()
@@ -236,6 +241,7 @@ export const WeeklyView = ({
                             handleTask={handleTask}
                             selectedDate={taskDate}
                             setOpenPopoverId={setOpenPopoverId}
+                            session={session}
                           />
                         </DialogContent>
                       </Dialog>

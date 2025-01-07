@@ -34,6 +34,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { findAvailableTimeSlot } from "./AutoScheduler";
 import { formatSimpleTime } from "@/utilities/formatSimpleTime";
+import { Session } from "next-auth";
 
 // Adjust formSchema to match Task interface and handle id generation
 const formSchema = z.object({
@@ -54,6 +55,7 @@ const formSchema = z.object({
       daysOfWeek: z.array(z.number().min(0).max(6)).optional(),
     })
     .optional(),
+  userId: z.string(),
 });
 
 export const EventForm = ({
@@ -64,6 +66,7 @@ export const EventForm = ({
   endDate = addHours(selectedDate, 1),
   operation = "add",
   setOpenPopoverId,
+  session,
 }: {
   handleTask: (task: Task, operation?: string) => void;
   title?: string;
@@ -72,6 +75,7 @@ export const EventForm = ({
   endDate?: Date;
   operation?: "add" | "edit" | "delete";
   setOpenPopoverId: (id: string | null) => void;
+  session: Session;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     mode: "onChange",
@@ -87,6 +91,7 @@ export const EventForm = ({
         (endDate.getTime() - selectedDate.getTime()) / (1000 * 60 * 60)
       ),
       isAutoScheduled: false,
+      userId: session?.user?.id,
     },
   });
   const isAutoScheduled = form.watch("isAutoScheduled");
@@ -254,7 +259,7 @@ export const EventForm = ({
                       <SelectTrigger className="w-[120px]">
                         <SelectValue placeholder="Select time" />
                       </SelectTrigger>
-                      <SelectContent >
+                      <SelectContent>
                         {Array.from({ length: 24 }).map((_, i) => {
                           const hours = Math.floor(i);
 

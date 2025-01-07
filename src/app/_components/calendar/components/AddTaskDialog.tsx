@@ -10,15 +10,18 @@ import {
 import { Task } from "@prisma/client";
 
 import { EventForm } from "../form/EventForm";
+import { Session } from "next-auth";
 
 export const AddTaskDialog = ({
   handleTask,
   openPopoverId,
   setOpenPopoverId,
+  session,
 }: {
   handleTask: (task: Task, operation?: string) => void;
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
+  session: Session;
 }) => {
   const taskDate = new Date();
   taskDate.setHours(taskDate.getHours(), 0, 0, 0);
@@ -36,15 +39,18 @@ export const AddTaskDialog = ({
           Add Task
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-[90vw] md:w-[450px] max-h-[90vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
-        <EventForm
-          handleTask={handleTask}
-          selectedDate={taskDate}
-          setOpenPopoverId={setOpenPopoverId}
-        />
+        <div className="mt-4">
+          <EventForm
+            handleTask={handleTask}
+            selectedDate={taskDate}
+            setOpenPopoverId={setOpenPopoverId}
+            session={session}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );

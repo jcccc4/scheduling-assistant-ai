@@ -1,10 +1,26 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Task } from "@prisma/client";
-// GET all tasks
+
+
 export async function GET() {
   try {
-    const tasks = await prisma.task.findMany();
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const tasks = await prisma.task.findMany({
+      where: {
+        userId: String(session.user.id),
+      },
+    });
+
     return NextResponse.json(tasks);
   } catch (error) {
     return NextResponse.json(
@@ -28,6 +44,7 @@ export async function POST(request: Request) {
         priority: task.priority,
         duration: task.duration,
         isAutoScheduled: task.isAutoScheduled,
+        userId: task.userId,
       },
     });
     return NextResponse.json(newTask);
@@ -64,14 +81,44 @@ export async function PUT(request: Request) {
 // DELETE task
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const { id } = await request.json();
+    
+    // Check if the task belongs to the current user
+    const task = await prisma.task.findUnique({
+      where: { id },
+      select: { userId: true }
+    });
+
+    if (!task) {
+      return NextResponse.json(
+        { error: "Task not found" },
+        { status: 404 }
+      );
+    }
+
+    if (task.userId !== session.user.id) {
+      return NextResponse.json(
+        { error: "Not authorized to delete this task" },
+        { status: 403 }
+      );
+    }
+
     await prisma.task.delete({
       where: { id },
     });
+    
     return NextResponse.json({ message: "Task deleted successfully" });
   } catch (error) {
     return NextResponse.json(
-      { error: `Failed to fetch tasks: ${error}` },
+      { error: `Failed to delete task: ${error}` },
       { status: 500 }
     );
   }

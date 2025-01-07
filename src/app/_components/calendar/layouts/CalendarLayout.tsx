@@ -1,6 +1,7 @@
 import React from "react";
 import { CalendarHeader } from "../components/Header";
 import { Task } from "@prisma/client";
+import { Session } from "next-auth";
 
 interface CalendarLayoutProps {
   isSignedIn: boolean;
@@ -12,6 +13,8 @@ interface CalendarLayoutProps {
   children: React.ReactNode;
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
+  setSelectedDate: (date: Date) => void,
+  session:Session
 }
 
 export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
@@ -24,6 +27,8 @@ export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
   openPopoverId,
   setOpenPopoverId,
   children,
+  setSelectedDate,
+  session
 }) => {
   return (
     <div className="flex flex-col h-screen">
@@ -36,6 +41,8 @@ export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
         handleTask={handleTask}
         openPopoverId={openPopoverId}
         setOpenPopoverId={setOpenPopoverId}
+        setSelectedDate={setSelectedDate}
+        session={session}
       />
       {children}
     </div>
