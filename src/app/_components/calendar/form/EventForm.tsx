@@ -225,7 +225,7 @@ export const EventForm = ({
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a start date</span>
+                              <span>Pick an start date</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -263,9 +263,12 @@ export const EventForm = ({
                         {Array.from({ length: 24 }).map((_, i) => {
                           const hours = Math.floor(i);
 
+                          const time = `${hours
+                            .toString()
+                            .padStart(2, "0")}:${0}`;
                           const timeString = formatSimpleTime(hours, 0);
                           return (
-                            <SelectItem key={timeString} value={timeString}>
+                            <SelectItem key={timeString} value={time}>
                               {timeString}
                             </SelectItem>
                           );

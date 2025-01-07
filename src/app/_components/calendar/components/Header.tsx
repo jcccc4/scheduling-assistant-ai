@@ -39,7 +39,7 @@ export const CalendarHeader = ({
   setOpenPopoverId,
   isSignedIn,
   setSelectedDate,
-  session
+  session,
 }: HeaderProps) => {
   const handleTodayClick = () => {
     setSelectedDate(new Date());
@@ -47,8 +47,8 @@ export const CalendarHeader = ({
   return (
     <header className="h-12 md:h-14 bg-white flex items-center justify-between text-lg md:text-xl px-2 md:px-4 shrink-0">
       <div className="flex items-center gap-2 md:gap-4">
-        <div className="flex gap-1 md:gap-2">
-          <SidebarTrigger />
+        <SidebarTrigger />
+        <div className="hidden lg:flex gap-1 md:gap-2">
           <Button
             onClick={handleTodayClick}
             variant="outline"
@@ -64,7 +64,7 @@ export const CalendarHeader = ({
             <ChevronRight />
           </Button>
         </div>
-        <h1 className="font-semibold">{`${
+        <h1 className="hidden font-semibold lg:block">{`${
           MONTHS[new Date().getMonth()]
         } ${new Date().getFullYear()}`}</h1>
       </div>

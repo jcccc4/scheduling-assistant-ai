@@ -39,18 +39,16 @@ export const AddTaskDialog = ({
           Add Task
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[90vw] md:w-[450px] max-h-[90vh] overflow-auto">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
-        <div className="mt-4">
           <EventForm
             handleTask={handleTask}
             selectedDate={taskDate}
             setOpenPopoverId={setOpenPopoverId}
             session={session}
           />
-        </div>
       </DialogContent>
     </Dialog>
   );
