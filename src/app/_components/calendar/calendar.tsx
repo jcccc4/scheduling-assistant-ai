@@ -143,6 +143,7 @@ export default function Scheduler({
             handleTask={handleTask}
             tasks={optimisticTasks}
             selectedDate={selectedDate}
+            session={session}
           />
         );
       case "weekly":
@@ -162,7 +163,7 @@ export default function Scheduler({
             handleTask={handleTask}
             tasks={tasks}
             selectedDate={selectedDate}
-            
+            session={session}
           />
         );
     }

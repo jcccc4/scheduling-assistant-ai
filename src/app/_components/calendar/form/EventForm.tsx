@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { findAvailableTimeSlot } from "./AutoScheduler";
-import { formatSimpleTime } from "@/utilities/formatSimpleTime";
 import { Session } from "next-auth";
 
 // Adjust formSchema to match Task interface and handle id generation
@@ -95,9 +94,6 @@ export const EventForm = ({
     },
   });
   const isAutoScheduled = form.watch("isAutoScheduled");
-
-  // Add this function to handle auto-scheduling
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.isAutoScheduled) {
       const { startTime, endTime } = await findAvailableTimeSlot(
@@ -107,7 +103,6 @@ export const EventForm = ({
       values.startTime = startTime;
       values.endTime = endTime;
     }
-    console.log(values);
     handleTask(
       {
         ...values,
@@ -242,37 +237,23 @@ export const EventForm = ({
                     </Popover>
 
                     <Select
-                      onValueChange={(time) => {
-                        const [hours, minutes] = time.split(":").map(Number);
+                      value={field.value.getHours().toString()}
+                      onValueChange={(e) => {
+                        const timeNumber = Number(e);
                         const newDate = new Date(field.value);
-                        newDate.setHours(hours, minutes);
+                        newDate.setHours(timeNumber);
                         field.onChange(newDate);
                       }}
-                      defaultValue={`${field.value
-                        .getHours()
-                        .toString()
-                        .padStart(2, "0")}:${field.value
-                        .getMinutes()
-                        .toString()
-                        .padStart(2, "0")}`}
                     >
                       <SelectTrigger className="w-[120px]">
-                        <SelectValue placeholder="Select time" />
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: 24 }).map((_, i) => {
-                          const hours = Math.floor(i);
-
-                          const time = `${hours
-                            .toString()
-                            .padStart(2, "0")}:${0}`;
-                          const timeString = formatSimpleTime(hours, 0);
-                          return (
-                            <SelectItem key={timeString} value={time}>
-                              {timeString}
-                            </SelectItem>
-                          );
-                        })}
+                        {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                          <SelectItem key={hour} value={String(hour)}>
+                            {`${hour.toString().padStart(2, "0")}:00`}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -314,37 +295,23 @@ export const EventForm = ({
                     </Popover>
 
                     <Select
-                      onValueChange={(time) => {
-                        const [hours, minutes] = time.split(":").map(Number);
+                      value={field.value.getHours().toString()}
+                      onValueChange={(e) => {
+                        const timeNumber = Number(e);
                         const newDate = new Date(field.value);
-                        newDate.setHours(hours, minutes);
+                        newDate.setHours(timeNumber);
                         field.onChange(newDate);
                       }}
-                      defaultValue={`${field.value
-                        .getHours()
-                        .toString()
-                        .padStart(2, "0")}:${field.value
-                        .getMinutes()
-                        .toString()
-                        .padStart(2, "0")}`}
                     >
                       <SelectTrigger className="w-[120px]">
-                        <SelectValue placeholder="Select time" />
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Array.from({ length: 24 }).map((_, i) => {
-                          const hours = Math.floor(i);
-
-                          const time = `${hours
-                            .toString()
-                            .padStart(2, "0")}:${0}`;
-                          const timeString = formatSimpleTime(hours, 0);
-                          return (
-                            <SelectItem key={timeString} value={time}>
-                              {timeString}
-                            </SelectItem>
-                          );
-                        })}
+                        {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                          <SelectItem key={hour} value={String(hour)}>
+                            {`${hour.toString().padStart(2, "0")}:00`}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

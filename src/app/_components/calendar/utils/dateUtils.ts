@@ -1,4 +1,4 @@
-import { today } from "../calendar";
+const today = new Date();
 
 export const isToday = (date: Date) => {
   return (

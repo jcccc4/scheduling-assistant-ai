@@ -13,17 +13,20 @@ import { cn } from "@/lib/utils";
 import { EventForm } from "../form/EventForm";
 import CalendarEvent from "../events/events";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Session } from "next-auth";
 
 interface DailyViewProps {
   tasks: Task[];
   handleTask: (task: Task) => void;
   selectedDate: Date;
+  session: Session;
 }
 
 export const DailyView = ({
   tasks,
   handleTask,
   selectedDate,
+  session,
 }: DailyViewProps) => {
   const today = new Date();
   selectedDate.setHours(0, 0, 0, 0);
@@ -99,6 +102,7 @@ export const DailyView = ({
                         handleTask={handleTask}
                         openPopoverId={openPopoverId}
                         setOpenPopoverId={setOpenPopoverId}
+                        session={session}
                       />
                     ) : null;
                   })}
@@ -148,6 +152,7 @@ export const DailyView = ({
                         handleTask={handleTask}
                         selectedDate={taskDate}
                         setOpenPopoverId={setOpenPopoverId}
+                        session={session}
                       />
                     </div>
                   </PopoverContent>

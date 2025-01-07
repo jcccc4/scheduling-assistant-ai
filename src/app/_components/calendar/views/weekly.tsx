@@ -186,6 +186,7 @@ export const WeeklyView = ({
                               handleTask={handleTask}
                               openPopoverId={openPopoverId}
                               setOpenPopoverId={setOpenPopoverId}
+                              session={session}
                             />
                           ) : null;
                         })}

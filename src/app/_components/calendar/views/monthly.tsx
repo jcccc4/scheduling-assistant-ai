@@ -12,17 +12,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Session } from "next-auth";
 
 interface MonthlyViewProps {
   tasks: Task[];
   handleTask: (task: Task) => void;
   selectedDate: Date;
+  session: Session;
 }
 
 export const MonthlyView = ({
   tasks,
   handleTask,
   selectedDate,
+  session,
 }: MonthlyViewProps) => {
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
   const today = new Date();
@@ -135,6 +138,7 @@ export const MonthlyView = ({
                         endDate={task.endTime}
                         operation="edit"
                         setOpenPopoverId={setOpenPopoverId}
+                        session={session}
                       />
                     </div>
                   </PopoverContent>
@@ -178,7 +182,7 @@ export const MonthlyView = ({
                               endDate={task.endTime}
                               operation="edit"
                               setOpenPopoverId={setOpenPopoverId}
-                            
+                              session={session}
                             />
                           </PopoverContent>
                         </Popover>
@@ -206,6 +210,7 @@ export const MonthlyView = ({
                     handleTask={handleTask}
                     selectedDate={date || selectedDate}
                     setOpenPopoverId={setOpenPopoverId}
+                    session={session}
                   />
                 </div>
               </DialogContent>

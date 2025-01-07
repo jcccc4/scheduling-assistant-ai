@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { EventForm } from "../form/EventForm";
 import { Task } from "@prisma/client";
+import { Session } from "next-auth";
 
 interface CalendarEventProps {
   eventData: Task;
@@ -19,6 +20,7 @@ interface CalendarEventProps {
   handleTask: (task: Task) => void;
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
+  session: Session;
 }
 
 const CalendarEvent: React.FC<CalendarEventProps> = ({
@@ -28,6 +30,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
   handleTask,
   openPopoverId,
   setOpenPopoverId,
+  session,
 }) => {
   const { id, title, startTime, endTime, description } = eventData;
   const startMinute = startTime.getHours() * 60 + startTime.getMinutes();
@@ -88,6 +91,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
           endDate={eventData.endTime}
           operation="edit"
           setOpenPopoverId={setOpenPopoverId}
+          session={session}
         />
       </PopoverContent>
     </Popover>
