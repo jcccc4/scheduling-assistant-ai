@@ -8,7 +8,7 @@ import React, {
 import { WeeklyView } from "./views/weekly";
 import { MonthlyView } from "./views/monthly";
 import { DailyView } from "./views/daily";
-import {  Task } from "@prisma/client";
+import { Task } from "@prisma/client";
 import { createTask, deleteTask, getTasks, updateTask } from "@/lib/api";
 import { CalendarLayout } from "./layouts/CalendarLayout";
 import { Session } from "next-auth";
@@ -34,13 +34,7 @@ type OptimisticAction = {
   task: Task;
   type: "add" | "edit" | "delete";
 };
-export default function Scheduler({
-  isSignedIn,
-  session,
-}: {
-  isSignedIn: boolean;
-  session: Session
-}) {
+export default function Scheduler({ session }: { session: Session }) {
   const [view, setView] = useState("weekly");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
@@ -171,7 +165,6 @@ export default function Scheduler({
 
   return (
     <CalendarLayout
-      isSignedIn={isSignedIn}
       view={view}
       setView={setView}
       handlePreviousWeek={handlePreviousWeek}

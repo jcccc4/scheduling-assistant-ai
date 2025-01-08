@@ -4,7 +4,6 @@ import { Task } from "@prisma/client";
 import { Session } from "next-auth";
 
 interface CalendarLayoutProps {
-  isSignedIn: boolean;
   view: string;
   setView: (view: string) => void;
   handlePreviousWeek: () => void;
@@ -13,12 +12,11 @@ interface CalendarLayoutProps {
   children: React.ReactNode;
   openPopoverId: string | null;
   setOpenPopoverId: (id: string | null) => void;
-  setSelectedDate: (date: Date) => void,
-  session:Session
+  setSelectedDate: (date: Date) => void;
+  session: Session;
 }
 
 export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
-  isSignedIn,
   view,
   setView,
   handlePreviousWeek,
@@ -28,12 +26,11 @@ export const CalendarLayout: React.FC<CalendarLayoutProps> = ({
   setOpenPopoverId,
   children,
   setSelectedDate,
-  session
+  session,
 }) => {
   return (
     <div className="flex flex-col h-screen">
       <CalendarHeader
-      isSignedIn={isSignedIn}
         view={view}
         setView={setView}
         onPreviousWeek={handlePreviousWeek}

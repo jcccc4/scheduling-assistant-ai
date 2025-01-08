@@ -39,7 +39,7 @@ export const AddTaskDialog = ({
           Add Task
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="p-4  w-full max-w-[800px]">
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>

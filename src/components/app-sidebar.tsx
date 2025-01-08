@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import GoogleButton from "./authentication/google-button";
 
 // Menu items.
 const items = [
@@ -20,7 +21,7 @@ const items = [
   },
 ];
 
-export async function AppSidebar() {
+export async function AppSidebar({isSignedIn}:{isSignedIn:boolean}) {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -38,6 +39,7 @@ export async function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <GoogleButton isSignedIn={isSignedIn} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

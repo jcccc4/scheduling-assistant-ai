@@ -15,9 +15,9 @@ export default async function WebApp() {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar isSignedIn={isSignedIn} />
       <main className="h-screen w-full flex flex-col">
-        <Calendar isSignedIn={isSignedIn} session={session} />
+        <Calendar session={session} />
       </main>
     </SidebarProvider>
   );
