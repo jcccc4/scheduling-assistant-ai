@@ -231,7 +231,7 @@ export const WeeklyView = ({
                             )}
                           ></div>
                         </DialogTrigger>
-                        <DialogContent className="p-4 z-[10000]">
+                        <DialogContent className="p-4  w-full max-w-[800px]">
                           <VisuallyHidden.Root>
                             <DialogTitle>
                               Create Event for {taskDate.toLocaleDateString()}{" "}

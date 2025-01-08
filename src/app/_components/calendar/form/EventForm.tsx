@@ -201,21 +201,20 @@ export const EventForm = ({
             )}
           />
         ) : (
-          // Date/time fields when auto-schedule is OFF
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full [&>*]:w-full">
             <FormField
               control={form.control}
               name="startTime"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Start Date & Time</FormLabel>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 relative z-[9999]">
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant={"outline"}
-                            className="w-[240px] pl-3 text-left font-normal"
+                            className="w-full pl-3 text-left font-normal"
                           >
                             {field.value ? (
                               format(field.value, "PPP")
@@ -226,7 +225,7 @@ export const EventForm = ({
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      <PopoverContent className=" w-auto p-0" align="start">
                         <Calendar
                           mode="single"
                           selected={field.value}
@@ -273,7 +272,7 @@ export const EventForm = ({
                         <FormControl>
                           <Button
                             variant={"outline"}
-                            className="w-[240px] pl-3 text-left font-normal"
+                            className="w-full pl-3 text-left font-normal"
                           >
                             {field.value ? (
                               format(field.value, "PPP")

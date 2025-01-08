@@ -43,12 +43,12 @@ export const AddTaskDialog = ({
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
-          <EventForm
-            handleTask={handleTask}
-            selectedDate={taskDate}
-            setOpenPopoverId={setOpenPopoverId}
-            session={session}
-          />
+        <EventForm
+          handleTask={handleTask}
+          selectedDate={taskDate}
+          setOpenPopoverId={setOpenPopoverId}
+          session={session}
+        />
       </DialogContent>
     </Dialog>
   );
