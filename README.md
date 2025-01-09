@@ -46,37 +46,3 @@ A modern web application for managing tasks with an interactive calendar interfa
    ```
 4. Open http://localhost:3000 in your browser.
 
-### Project Stucture
-
-```
-src/
-├── app/                  
-│   ├── _components/      
-│   │   └── calendar/     
-│   │       ├── views/        # Calendar view components
-│   │       ├── events/       # Event handling components
-│   │       └── form/         # Task creation forms
-│   ├── layout.tsx           # Root layout component
-│   └── globals.css          # Global styles
-│
-├── components/          
-│   └── ui/                  # Reusable UI components
-│       ├── popover/         # Popover components
-│       ├── sidebar/         # Sidebar components
-│       ├── sheet/          # Sheet components
-│       └── textarea/       # Text input components
-│
-└── lib/                
-    ├── utils.ts            # Utility functions
-    └── types.ts           # TypeScript type definitions
-```
-
-### Contributing
-
-We welcome contributions! Here's how to get started:
-
-1. Fork the repository.
-2. Create a new branch: git checkout -b feature/your-feature-name
-3. Make your changes and commit them: git commit -m "Your descriptive commit message"
-4. Push your branch: git push origin feature/your-feature-name
-5. Open a pull request.
