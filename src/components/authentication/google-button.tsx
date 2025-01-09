@@ -15,7 +15,7 @@ export default function GoogleButton({ isSignedIn }: { isSignedIn: boolean }) {
   return (
     <button
       onClick={handleClick}
-      className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+      className="flex w-full items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
     >
       <FaGoogle />
       <span> {isSignedIn ? "Sign out" : "Sign in with Google"}</span>

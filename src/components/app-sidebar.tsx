@@ -1,4 +1,5 @@
-import { Calendar } from "lucide-react";
+"use client";
+import { Calendar, MessageSquare } from "lucide-react";
 
 import {
   Sidebar,
@@ -11,17 +12,22 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import GoogleButton from "./authentication/google-button";
+import Link from "next/link";
 
-// Menu items.
 const items = [
   {
     title: "Calendar",
-    url: "#",
+    url: "/webapp",
     icon: Calendar,
+  },
+  {
+    title: "Feedback",
+    url: "/feedback",
+    icon: MessageSquare,
   },
 ];
 
-export async function AppSidebar({isSignedIn}:{isSignedIn:boolean}) {
+export function AppSidebar({ isSignedIn }: { isSignedIn: boolean }) {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -32,14 +38,17 @@ export async function AppSidebar({isSignedIn}:{isSignedIn:boolean}) {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link className="flex gap-2 px-4" href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <GoogleButton isSignedIn={isSignedIn} />
+
+              <SidebarMenuItem>
+                <GoogleButton isSignedIn={isSignedIn} />
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
